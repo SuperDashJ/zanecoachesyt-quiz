@@ -84,8 +84,9 @@ export async function POST(request) {
       { status: 200 }
     );
   } catch (error) {
+    const isValidationError = error instanceof z.ZodError;
     const message =
-      error instanceof z.ZodError
+      isValidationError
         ? "Please complete the quiz and enter a valid email address."
         : error instanceof Error
           ? error.message
@@ -96,7 +97,7 @@ export async function POST(request) {
         ok: false,
         error: message
       },
-      { status: 400 }
+      { status: isValidationError ? 400 : 500 }
     );
   }
 }

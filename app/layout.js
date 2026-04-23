@@ -1,9 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "ZANESBESTLIFE Quiz",
+  title: "zanesbestlife quiz",
   description:
-    "A high-converting reset quiz that captures email leads and personalized quiz answers."
+    "A high-converting reset quiz that captures email leads and delivers a personalized plan."
 };
 
 export default function RootLayout({ children }) {

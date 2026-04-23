@@ -3,7 +3,6 @@
 import { startTransition, useEffect, useState, useTransition } from "react";
 
 import { quizSteps } from "@/lib/quiz-data";
-import { buildLeadProfile } from "@/lib/quiz-logic";
 import { Illustration, LeadHeroIllustration } from "@/components/illustrations";
 
 const STORAGE_KEY = "zanesbestlife-quiz-state";
@@ -36,14 +35,26 @@ function ProgressBar({ currentStep }) {
 }
 
 function AnswerCard({ option, selected, onSelect, scoreStyle = false }) {
+  const hasImage = Boolean(option.imageSrc);
+
   return (
     <button
-      className={`answer-card${selected ? " is-selected" : ""}${scoreStyle ? " is-score-card" : ""}`}
+      className={`answer-card${selected ? " is-selected" : ""}${scoreStyle ? " is-score-card" : ""}${hasImage ? " has-image" : ""}`}
       onClick={() => onSelect(option.id)}
       type="button"
     >
-      <div className={`answer-art-frame${scoreStyle ? " is-score-frame" : ""}`}>
-        <Illustration art={option.art} />
+      <div className="answer-art-frame">
+        {hasImage ? (
+          <img
+            alt=""
+            aria-hidden="true"
+            className="answer-image"
+            loading="eager"
+            src={option.imageSrc}
+          />
+        ) : (
+          <Illustration art={option.art} />
+        )}
       </div>
       <span className={`answer-label${scoreStyle ? " is-score-label" : ""}`}>{option.label}</span>
     </button>
@@ -62,7 +73,7 @@ function PillOption({ option, selected, onSelect }) {
   );
 }
 
-function FinalStep({ email, onEmailChange, onSubmit, preview, error, isPending, website, onWebsiteChange }) {
+function FinalStep({ email, onEmailChange, onSubmit, error, isPending, website, onWebsiteChange }) {
   return (
     <section className="quiz-stage quiz-stage--email">
       <div className="question-meta">
@@ -73,19 +84,6 @@ function FinalStep({ email, onEmailChange, onSubmit, preview, error, isPending, 
       <div className="email-layout">
         <div className="email-copy">
           <h1 className="question-title question-title--email">Save your reset plan for later</h1>
-          <p className="question-subtext">
-            We’ll send your score, your biggest priorities, what’s holding you back, and your
-            custom-tailored plan to fix your life.
-          </p>
-
-          {preview ? (
-            <div className="preview-chips">
-              <span className="preview-chip">Score: {preview.score}</span>
-              {preview.biggestPriority ? <span className="preview-chip">{preview.biggestPriority}</span> : null}
-              {preview.blocker ? <span className="preview-chip">{preview.blocker}</span> : null}
-              {preview.timeBudget ? <span className="preview-chip">{preview.timeBudget}</span> : null}
-            </div>
-          ) : null}
         </div>
 
         <div className="email-visual">
@@ -225,7 +223,6 @@ export function QuizApp() {
   const currentStep = quizSteps[stepIndex];
   const isEmailStep = currentStep.kind === "email";
   const isQuizComplete = ANSWER_STEP_IDS.every((id) => answers[id]);
-  const previewProfile = isQuizComplete ? buildLeadProfile(answers) : null;
 
   const cardOptions = currentStep.options?.filter((option) => option.emphasis !== "pill") || [];
   const pillOptions = currentStep.options?.filter((option) => option.emphasis === "pill") || [];
@@ -313,7 +310,7 @@ export function QuizApp() {
   return (
     <div className="site-shell">
       <header className="brand-bar">
-        <div className="brand-mark">ZANESBESTLIFE</div>
+        <div className="brand-mark">zanesbestlife</div>
       </header>
 
       <main className="page-shell">
@@ -338,7 +335,6 @@ export function QuizApp() {
               onEmailChange={setEmail}
               onSubmit={handleSubmit}
               onWebsiteChange={setWebsite}
-              preview={previewProfile}
               website={website}
             />
           </>
@@ -366,7 +362,12 @@ export function QuizApp() {
             <div
               className="answer-grid"
               style={{
-                "--grid-columns": currentStep.columns || 3
+                "--grid-columns": currentStep.columns || 3,
+                "--grid-columns-mobile": currentStep.mobileColumns || 2,
+                "--card-min-height": `${currentStep.cardMinHeight || (currentStep.cardStyle === "score" ? 300 : 360)}px`,
+                "--card-min-height-mobile": `${currentStep.cardMinHeightMobile || 170}px`,
+                "--art-min-height": `${currentStep.artMinHeight || (currentStep.cardStyle === "score" ? 190 : 240)}px`,
+                "--art-min-height-mobile": `${currentStep.artMinHeightMobile || 96}px`
               }}
             >
               {cardOptions.map((option) => (

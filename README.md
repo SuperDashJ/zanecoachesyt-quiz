@@ -25,16 +25,21 @@ For durable storage on Vercel, set these environment variables and point them at
 ```bash
 GITHUB_STORAGE_REPO=SuperDashJ/zanesbestlife-leads
 GITHUB_STORAGE_TOKEN=github_pat_xxx
-GITHUB_STORAGE_BRANCH=leads
-GITHUB_STORAGE_COMMITTER_NAME=ZanesBestLife Leads
-GITHUB_STORAGE_COMMITTER_EMAIL=leads@users.noreply.github.com
 ```
 
 For automatic report delivery, also set:
 
 ```bash
 RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL="ZANESBESTLIFE <onboarding@resend.dev>"
+```
+
+Optional production overrides:
+
+```bash
+GITHUB_STORAGE_BRANCH=leads
+GITHUB_STORAGE_COMMITTER_NAME=ZanesBestLife Leads
+GITHUB_STORAGE_COMMITTER_EMAIL=leads@users.noreply.github.com
+RESEND_FROM_EMAIL="zanesbestlife <onboarding@resend.dev>"
 RESEND_REPLY_TO=
 ```
 
@@ -55,4 +60,4 @@ How it works:
 ## Notes
 
 - The visual structure is built to match the supplied quiz references while staying fully editable in-code.
-- The image references from the chat were recreated as inline SVG illustrations inside the app so the project remains self-contained in this workspace.
+- The quiz now uses the supplied local button/source images from `imagestouse/` wherever those assets were provided, with code-native fallbacks only for missing source art.

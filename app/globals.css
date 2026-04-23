@@ -35,7 +35,7 @@ body {
     linear-gradient(180deg, #f7f4ee 0%, #f3efe8 100%);
   color: var(--text);
   font-family: var(--sans);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 button,
@@ -48,10 +48,9 @@ button {
 }
 
 .site-shell {
-  height: 100dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .brand-bar {
@@ -80,7 +79,8 @@ button {
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .quiz-stage {
@@ -90,6 +90,7 @@ button {
   flex-direction: column;
   align-items: center;
   gap: clamp(14px, 2.2vh, 24px);
+  padding-bottom: 18px;
 }
 
 .question-meta {
@@ -224,6 +225,11 @@ button {
   overflow: hidden;
 }
 
+.answer-card.has-image .answer-art-frame {
+  padding: 0;
+  background: transparent;
+}
+
 .answer-label {
   display: inline-flex;
   justify-content: center;
@@ -278,10 +284,9 @@ button {
 .answer-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
+  object-position: center;
   display: block;
-  border-radius: 18px;
 }
 
 .emoji-illustration {
@@ -316,159 +321,20 @@ button {
 
 .email-visual {
   min-height: 320px;
-  padding: 16px;
+  padding: 0;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(214, 210, 202, 0.92);
   box-shadow: var(--shadow);
-}
-
-.lead-hero-art {
-  height: 100%;
-}
-
-.lead-hero-stage {
-  position: relative;
-  height: 100%;
-  min-height: 288px;
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at center 20%, rgba(255, 252, 243, 0.98), rgba(243, 239, 232, 0.98) 60%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(245, 242, 236, 0.85));
   overflow: hidden;
 }
 
-.lead-hero-path {
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  width: 320px;
-  height: 170px;
-  transform: translateX(-50%);
-  background:
-    linear-gradient(180deg, rgba(21, 28, 39, 0), rgba(21, 28, 39, 0.84)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0));
-  clip-path: polygon(44% 0%, 56% 0%, 68% 100%, 32% 100%);
-}
-
-.lead-hero-ring {
-  position: absolute;
-  inset: 0;
-}
-
-.lead-hero-ring--top::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 78px;
-  width: 520px;
-  height: 240px;
-  transform: translateX(-50%);
-  border-top: 2px solid rgba(28, 36, 48, 0.28);
-  border-radius: 50%;
-}
-
-.lead-hero-orbit {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  width: 86px;
-  height: 86px;
-  padding: 14px;
-  border-radius: 50%;
-  background: #111825;
-  box-shadow: 0 24px 60px rgba(20, 26, 36, 0.16);
-}
-
-.lead-hero-orbit .svg-illustration {
-  max-width: 66px;
-}
-
-.lead-hero-orbit .svg-illustration * {
-  transform-origin: center;
-}
-
-.lead-hero-orbit--focus {
-  left: 50%;
-  top: 48px;
-  transform: translateX(-50%);
-}
-
-.lead-hero-orbit--relationships {
-  right: 74px;
-  top: 122px;
-}
-
-.lead-hero-orbit--discipline {
-  right: 38px;
-  top: 252px;
-}
-
-.lead-hero-orbit--wealth {
-  left: 56px;
-  top: 252px;
-}
-
-.lead-hero-orbit--health {
-  left: 86px;
-  top: 122px;
-}
-
-.lead-hero-silhouette {
-  position: absolute;
-  left: 50%;
-  bottom: 92px;
-  transform: translateX(-50%);
-  width: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.lead-hero-head {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #111825;
-}
-
-.lead-hero-body {
-  position: relative;
-  width: 56px;
-  height: 142px;
-  margin-top: 8px;
-  border-radius: 20px 20px 12px 12px;
-  background: linear-gradient(180deg, #121926, #0f1621);
-}
-
-.lead-hero-body::before,
-.lead-hero-body::after {
-  content: "";
-  position: absolute;
-  top: 60px;
-  width: 18px;
-  height: 88px;
-  border-radius: 999px;
-  background: #111825;
-}
-
-.lead-hero-body::before {
-  left: -8px;
-  transform: rotate(12deg);
-}
-
-.lead-hero-body::after {
-  right: -8px;
-  transform: rotate(-12deg);
-}
-
-.lead-hero-shadow {
-  width: 120px;
-  height: 18px;
-  margin-top: 14px;
-  border-radius: 999px;
-  background: rgba(17, 24, 37, 0.18);
-  filter: blur(7px);
+.email-hero-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
 }
 
 .lead-form {
@@ -777,39 +643,6 @@ button {
 
   .email-visual {
     min-height: 220px;
-  }
-
-  .lead-hero-ring--top::before {
-    width: 360px;
-    height: 180px;
-  }
-
-  .lead-hero-orbit {
-    width: 72px;
-    height: 72px;
-    padding: 12px;
-  }
-
-  .lead-hero-orbit .svg-illustration {
-    max-width: 54px;
-  }
-
-  .lead-hero-orbit--relationships {
-    right: 26px;
-  }
-
-  .lead-hero-orbit--discipline {
-    right: 6px;
-    top: 246px;
-  }
-
-  .lead-hero-orbit--wealth {
-    left: 16px;
-    top: 246px;
-  }
-
-  .lead-hero-orbit--health {
-    left: 28px;
   }
 
   .lead-form,

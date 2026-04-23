@@ -3,7 +3,7 @@
 import { startTransition, useEffect, useState, useTransition } from "react";
 
 import { quizSteps } from "@/lib/quiz-data";
-import { Illustration, LeadHeroIllustration } from "@/components/illustrations";
+import { Illustration } from "@/components/illustrations";
 
 const STORAGE_KEY = "zanesbestlife-quiz-state";
 const ANSWER_STEP_IDS = quizSteps
@@ -87,7 +87,13 @@ function FinalStep({ email, onEmailChange, onSubmit, error, isPending, website, 
         </div>
 
         <div className="email-visual">
-          <LeadHeroIllustration />
+          <img
+            alt=""
+            aria-hidden="true"
+            className="email-hero-image"
+            loading="eager"
+            src="/quiz-assets/art/final-hero.png"
+          />
         </div>
       </div>
 

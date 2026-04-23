@@ -130,7 +130,7 @@ function FinalStep({ email, onEmailChange, onSubmit, preview, error, isPending, 
   );
 }
 
-function SuccessState({ profile, email, onRestart }) {
+function SuccessState({ profile, email, emailDelivery, onRestart }) {
   return (
     <section className="quiz-stage quiz-stage--success">
       <div className="question-meta">
@@ -147,7 +147,9 @@ function SuccessState({ profile, email, onRestart }) {
         <div className="success-copy">
           <h1 className="question-title question-title--success">Your reset plan is saved.</h1>
           <p className="question-subtext">
-            {email} is now tied to your quiz answers, priorities, blockers, and custom reset plan.
+            {emailDelivery?.ok
+              ? `Your full report was emailed to ${email}.`
+              : `${email} is now tied to your quiz answers, priorities, blockers, and custom reset plan.`}
           </p>
 
           <div className="success-panels">
@@ -293,7 +295,10 @@ export function QuizApp() {
           throw new Error(result.error || "Unable to save your reset plan.");
         }
 
-        setSubmittedProfile(result.profile);
+        setSubmittedProfile({
+          ...result.profile,
+          emailDelivery: result.emailDelivery
+        });
         window.localStorage.removeItem(STORAGE_KEY);
       } catch (submissionError) {
         setError(
@@ -313,7 +318,12 @@ export function QuizApp() {
 
       <main className="page-shell">
         {submittedProfile ? (
-          <SuccessState email={email} onRestart={handleRestart} profile={submittedProfile} />
+          <SuccessState
+            email={email}
+            emailDelivery={submittedProfile.emailDelivery}
+            onRestart={handleRestart}
+            profile={submittedProfile}
+          />
         ) : isEmailStep ? (
           <>
             {stepIndex > 0 ? (

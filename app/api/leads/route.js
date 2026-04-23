@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { sendReportEmail } from "@/lib/email";
 import { buildLeadProfile } from "@/lib/quiz-logic";
 import { saveLead } from "@/lib/storage";
 
@@ -28,12 +29,27 @@ export async function POST(request) {
 
     const profile = buildLeadProfile(payload.answers);
     const createdAt = new Date().toISOString();
+    let emailDelivery;
+
+    try {
+      emailDelivery = await sendReportEmail({
+        email: payload.email.trim().toLowerCase(),
+        profile
+      });
+    } catch (emailError) {
+      emailDelivery = {
+        ok: false,
+        error: emailError instanceof Error ? emailError.message : "Unable to send the reset report email."
+      };
+    }
+
     const lead = {
       id: crypto.randomUUID(),
       createdAt,
       email: payload.email.trim().toLowerCase(),
       answers: payload.answers,
       profile,
+      emailDelivery,
       source: "zanesbestlife-quiz",
       ipAddress:
         request.headers.get("x-forwarded-for") ||
@@ -44,11 +60,26 @@ export async function POST(request) {
 
     const storage = await saveLead(lead);
 
+    if (!emailDelivery?.ok && !emailDelivery?.skipped) {
+      return Response.json(
+        {
+          ok: false,
+          error:
+            "We saved the lead, but the report email could not be sent. Please fix email delivery before going live.",
+          storage,
+          profile,
+          emailDelivery
+        },
+        { status: 502 }
+      );
+    }
+
     return Response.json(
       {
         ok: true,
         storage,
-        profile
+        profile,
+        emailDelivery
       },
       { status: 200 }
     );

@@ -5,6 +5,7 @@ A high-converting quiz funnel built in Next.js with:
 - an 8-step quiz flow
 - email capture on the final step
 - derived score and tailored reset-plan summary
+- automatic personalized report emails on submit
 - GitHub-backed lead storage for production
 - local file storage for development
 
@@ -29,11 +30,20 @@ GITHUB_STORAGE_COMMITTER_NAME=ZanesBestLife Leads
 GITHUB_STORAGE_COMMITTER_EMAIL=leads@users.noreply.github.com
 ```
 
+For automatic report delivery, also set:
+
+```bash
+RESEND_API_KEY=re_xxx
+RESEND_FROM_EMAIL="ZANESBESTLIFE <onboarding@resend.dev>"
+RESEND_REPLY_TO=
+```
+
 How it works:
 
 1. The API route creates the storage branch if it does not exist.
-2. Each submission is appended to a dated `.ndjson` file in that branch.
-3. The quiz stores email, answers, score, and generated plan summary.
+2. Each submission generates a personalized reset report and attempts immediate email delivery.
+3. Each submission is appended to a dated `.ndjson` file in the storage branch.
+4. The quiz stores email, answers, score, generated plan summary, and email-delivery status.
 
 ## Deploying to Vercel
 

@@ -218,6 +218,7 @@ button {
   background: var(--surface-muted);
   box-shadow: var(--shadow);
   overflow: hidden;
+  outline: none;
   transition:
     transform 180ms ease,
     border-color 180ms ease,
@@ -242,15 +243,15 @@ button {
   min-height: 0;
   display: grid;
   place-items: center;
-  padding: clamp(8px, 1vh, 12px);
-  border-radius: 18px;
-  background: #fff;
+  padding: clamp(10px, 1.2vh, 16px);
+  border-radius: 0;
+  background: transparent;
   overflow: hidden;
 }
 
 .answer-card.has-image .answer-art-frame {
-  padding: 0;
-  background: #fff;
+  padding: clamp(8px, 1vh, 12px);
+  background: transparent;
 }
 
 .answer-label {
@@ -329,7 +330,7 @@ button {
 }
 
 .feature-art {
-  transform: scale(1.12);
+  transform: none;
 }
 
 .emoji-illustration {
@@ -357,18 +358,20 @@ button {
 }
 
 .email-background-image {
-  grid-row: 3;
-  width: min(940px, 72vw);
-  height: 100%;
+  position: absolute;
+  inset: clamp(10px, 2vh, 18px) 0 auto;
+  width: 100%;
+  height: calc(100% - clamp(20px, 4vh, 36px));
   min-height: 0;
   justify-self: center;
   align-self: center;
   display: block;
   object-fit: contain;
   object-position: center;
-  opacity: 0.96;
-  filter: drop-shadow(0 26px 45px rgba(17, 24, 37, 0.1));
+  opacity: 0.34;
+  filter: drop-shadow(0 26px 45px rgba(17, 24, 37, 0.08));
   z-index: -1;
+  pointer-events: none;
 }
 
 .lead-form {

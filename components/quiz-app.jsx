@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useEffect, useState, useTransition } from "react";
+import { track } from "@vercel/analytics";
 
 import { quizSteps } from "@/lib/quiz-data";
 import { Illustration } from "@/components/illustrations";
@@ -36,10 +37,13 @@ function ProgressBar({ currentStep }) {
 
 function AnswerCard({ option, selected, onSelect, scoreStyle = false }) {
   const hasImage = Boolean(option.imageSrc);
+  const imageFitClass = option.imageFit === "cover" ? " fit-cover" : " fit-contain";
+  const imageClass = option.imageClass ? ` ${option.imageClass}` : "";
 
   return (
     <button
-      className={`answer-card${selected ? " is-selected" : ""}${scoreStyle ? " is-score-card" : ""}${hasImage ? " has-image" : ""}`}
+      aria-pressed={selected}
+      className={`answer-card${scoreStyle ? " is-score-card" : ""}${hasImage ? " has-image" : ""}${imageFitClass}`}
       onClick={() => onSelect(option.id)}
       type="button"
     >
@@ -48,7 +52,7 @@ function AnswerCard({ option, selected, onSelect, scoreStyle = false }) {
           <img
             alt=""
             aria-hidden="true"
-            className="answer-image"
+            className={`answer-image${imageClass}`}
             loading="eager"
             src={option.imageSrc}
           />
@@ -64,7 +68,8 @@ function AnswerCard({ option, selected, onSelect, scoreStyle = false }) {
 function PillOption({ option, selected, onSelect }) {
   return (
     <button
-      className={`pill-option${selected ? " is-selected" : ""}`}
+      aria-pressed={selected}
+      className="pill-option"
       onClick={() => onSelect(option.id)}
       type="button"
     >
@@ -73,29 +78,38 @@ function PillOption({ option, selected, onSelect }) {
   );
 }
 
-function FinalStep({ email, onEmailChange, onSubmit, error, isPending, website, onWebsiteChange }) {
+function FinalStep({
+  email,
+  onBack,
+  onEmailChange,
+  onSubmit,
+  error,
+  isPending,
+  website,
+  onWebsiteChange
+}) {
   return (
-    <section className="quiz-stage quiz-stage--email">
+    <section className="quiz-stage quiz-stage--email" key="lead-capture">
+      <img
+        alt=""
+        aria-hidden="true"
+        className="email-background-image"
+        loading="eager"
+        src="/quiz-assets/art/final-background.png"
+      />
+
       <div className="question-meta">
-        <span className="step-counter">8 of 8</span>
-        <ProgressBar currentStep={7} />
+        <button className="back-button" onClick={onBack} type="button">
+          Back
+        </button>
+        <div className="question-meta-center">
+          <span className="step-counter">8 of 8</span>
+          <ProgressBar currentStep={7} />
+        </div>
+        <span />
       </div>
 
-      <div className="email-layout">
-        <div className="email-copy">
-          <h1 className="question-title question-title--email">Save your reset plan for later</h1>
-        </div>
-
-        <div className="email-visual">
-          <img
-            alt=""
-            aria-hidden="true"
-            className="email-hero-image"
-            loading="eager"
-            src="/quiz-assets/art/final-hero.png"
-          />
-        </div>
-      </div>
+      <h1 className="question-title question-title--email">We Will Email You Your Results</h1>
 
       <form className="lead-form" onSubmit={onSubmit}>
         <label className="field-label" htmlFor="email">
@@ -233,8 +247,24 @@ export function QuizApp() {
   const cardOptions = currentStep.options?.filter((option) => option.emphasis !== "pill") || [];
   const pillOptions = currentStep.options?.filter((option) => option.emphasis === "pill") || [];
 
+  useEffect(() => {
+    if (!hasLoaded || submittedProfile) {
+      return;
+    }
+
+    track("Quiz Step Viewed", {
+      step: currentStep.stepNumber,
+      stepId: currentStep.id
+    });
+  }, [currentStep.id, currentStep.stepNumber, hasLoaded, submittedProfile]);
+
   function handleSelect(optionId) {
     setError("");
+    track("Quiz Answer Selected", {
+      optionId,
+      step: currentStep.stepNumber,
+      stepId: currentStep.id
+    });
 
     startTransition(() => {
       setAnswers((previous) => ({
@@ -277,6 +307,9 @@ export function QuizApp() {
     }
 
     setError("");
+    track("Lead Form Submitted", {
+      completedSteps: ANSWER_STEP_IDS.length
+    });
 
     startSubmitTransition(async () => {
       try {
@@ -301,6 +334,10 @@ export function QuizApp() {
         setSubmittedProfile({
           ...result.profile,
           emailDelivery: result.emailDelivery
+        });
+        track("Lead Saved", {
+          emailSent: Boolean(result.emailDelivery?.ok),
+          storageMode: result.storage?.mode || "unknown"
         });
         window.localStorage.removeItem(STORAGE_KEY);
       } catch (submissionError) {
@@ -328,24 +365,18 @@ export function QuizApp() {
             profile={submittedProfile}
           />
         ) : isEmailStep ? (
-          <>
-            {stepIndex > 0 ? (
-              <button className="back-button" onClick={handleBack} type="button">
-                Back
-              </button>
-            ) : null}
-            <FinalStep
-              email={email}
-              error={error}
-              isPending={isPending}
-              onEmailChange={setEmail}
-              onSubmit={handleSubmit}
-              onWebsiteChange={setWebsite}
-              website={website}
-            />
-          </>
+          <FinalStep
+            email={email}
+            error={error}
+            isPending={isPending}
+            onBack={handleBack}
+            onEmailChange={setEmail}
+            onSubmit={handleSubmit}
+            onWebsiteChange={setWebsite}
+            website={website}
+          />
         ) : (
-          <section className="quiz-stage">
+          <section className="quiz-stage" key={currentStep.id}>
             <div className="question-meta">
               {stepIndex > 0 ? (
                 <button className="back-button" onClick={handleBack} type="button">

@@ -33,14 +33,16 @@ For automatic report delivery, also set:
 RESEND_API_KEY=re_xxx
 ```
 
+See [EMAIL_SETUP.md](./EMAIL_SETUP.md) for the full production checklist, including Resend domain verification, sender setup, Vercel environment variables, and smoke testing.
+
 Optional production overrides:
 
 ```bash
 GITHUB_STORAGE_BRANCH=leads
 GITHUB_STORAGE_COMMITTER_NAME=ZanesBestLife Leads
 GITHUB_STORAGE_COMMITTER_EMAIL=leads@users.noreply.github.com
-RESEND_FROM_EMAIL="zanesbestlife <onboarding@resend.dev>"
-RESEND_REPLY_TO=
+RESEND_FROM_EMAIL="ZanesBestLife <results@zanesquiz.com>"
+RESEND_REPLY_TO=zanesquizresults@gmail.com
 ```
 
 How it works:

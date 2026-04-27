@@ -95,7 +95,7 @@ function FinalStep({
         aria-hidden="true"
         className="email-background-image"
         loading="eager"
-        src="/quiz-assets/art/final-background.png"
+        src="/quiz-assets/art/final-email-background.png"
       />
 
       <div className="question-meta">
@@ -109,7 +109,10 @@ function FinalStep({
         <span />
       </div>
 
-      <h1 className="question-title question-title--email">We Will Email You Your Results</h1>
+      <h1 className="question-title question-title--email">We&rsquo;ll Email You Your Results</h1>
+      <p className="question-subtext question-subtext--email">
+        Enter your email to get your personalized plan.
+      </p>
 
       <form className="lead-form" onSubmit={onSubmit}>
         <label className="field-label" htmlFor="email">
@@ -141,7 +144,10 @@ function FinalStep({
           value={website}
         />
 
-        <p className="privacy-note">We respect your privacy. No spam, ever.</p>
+        <p className="privacy-note">
+          <span className="privacy-lock" aria-hidden="true" />
+          We respect your privacy. No spam, ever.
+        </p>
         {error ? <p className="form-error">{error}</p> : null}
       </form>
     </section>

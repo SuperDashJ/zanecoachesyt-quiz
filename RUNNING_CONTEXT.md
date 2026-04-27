@@ -240,8 +240,20 @@ Assistant actions taken so far:
 - Updated `.env.example`, `README.md`, and `EMAIL_SETUP.md` so production setup points at `results@zanesquiz.com` and `zanesquizresults@gmail.com`.
 - Ran `npm run build`; it passed.
 - Checked for local Vercel project linkage; `.vercel/` is not present and `vercel` CLI is not installed. Shipping will therefore proceed through GitHub push, which should trigger Vercel if Git integration is connected.
+- Staged only intended files and left unrelated untracked `imagestouse/19.png`, `imagestouse/20.png`, and `imagestouse/buildingselfconfidence.png` untouched.
+- Committed `809484e` with message `Prepare quiz for email testing`.
+- Pushed `main` to GitHub successfully.
+- Checked `https://zanesquiz.com`; production returned HTTP 200 from Vercel.
+- Confirmed production HTML references the newly pushed first-page assets, including `/quiz-assets/art/priority-money-new.png` and `/quiz-assets/art/priority-fitness-new.png`.
+- Ran a real production `/api/leads` smoke test using `zanesquizresults@gmail.com`.
+- Production smoke test returned `ok: true`.
+- Production storage returned `mode: "github"`, `repository: "SuperDashJ/zanesbestlife-quiz"`, `branch: "main"`, and path `leads/2026-04/2026-04-27.ndjson`.
+- Production email delivery returned `emailDelivery.ok: true` with Resend message id `c7b7be4c-093a-449d-8a79-0811f61d0379`.
+- Pulled the remote lead-storage commit created by the production smoke test; local repo now includes the generated `leads/2026-04/2026-04-27.ndjson` record from production.
 
 Assistant rationale summary:
 
 - The code already supports Resend and GitHub-backed storage. The important readiness work is aligning docs/defaults with the verified `zanesquiz.com` sender, avoiding secret exposure, validating the build, then pushing code so Vercel can redeploy.
 - The previous `RESEND_FROM_EMAIL=onboarding@resend.dev` value was the main mismatch with the verified sender domain. The code guard prevents that placeholder from blocking realistic email testing even if Vercel still has the placeholder value.
+- The production smoke test proves the full path is working: deployed frontend/API reachable, Resend sending accepted, GitHub storage accepted, and personalized profile returned.
+- Production storage is currently writing lead data into the app repo's `main` branch because that is how Gemini configured `GITHUB_STORAGE_REPO` and `GITHUB_STORAGE_BRANCH`. This is workable for testing, but a private dedicated leads repo or dedicated non-deploy branch remains cleaner long term.

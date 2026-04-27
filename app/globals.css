@@ -373,7 +373,7 @@ button {
   justify-content: stretch;
   isolation: isolate;
   gap: 0;
-  padding: 154px 24px 0;
+  padding: 130px 24px 0;
 }
 
 .quiz-stage--email > * {
@@ -385,13 +385,13 @@ button {
   position: absolute;
   inset: auto 0 0;
   width: 100%;
-  height: min(67vh, 632px);
+  height: min(72vh, 660px);
   min-height: 0;
   justify-self: center;
   align-self: center;
   display: block;
   object-fit: cover;
-  object-position: center 60%;
+  object-position: center 58%;
   opacity: 1;
   filter: none;
   z-index: -2;
@@ -427,26 +427,26 @@ button {
   content: "";
   position: absolute;
   inset: 0 0 auto;
-  height: 38%;
-  background: linear-gradient(180deg, rgba(251, 250, 247, 0.98), rgba(251, 250, 247, 0.64) 70%, rgba(251, 250, 247, 0));
+  height: 46%;
+  background: linear-gradient(180deg, rgba(251, 250, 247, 0.98), rgba(251, 250, 247, 0.58) 70%, rgba(251, 250, 247, 0));
   pointer-events: none;
   z-index: -1;
 }
 
 .quiz-stage--email .question-meta {
   position: absolute;
-  top: 24px;
+  top: 22px;
   left: 0;
   right: 0;
   padding: 0 58px;
   z-index: 2;
-  grid-template-columns: 160px 1fr 160px;
+  grid-template-columns: 190px 1fr 190px;
   align-items: start;
 }
 
 .quiz-stage--email .question-meta-center {
-  gap: 18px;
-  padding-top: 40px;
+  gap: 14px;
+  padding-top: 34px;
 }
 
 .quiz-stage--email .step-counter {
@@ -470,26 +470,34 @@ button {
   display: none;
 }
 
-.quiz-stage--email .back-button {
+.quiz-stage--email .restart-quiz-button {
   min-height: 56px;
-  padding: 0 23px;
-  gap: 12px;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 25px;
   border-color: rgba(214, 208, 200, 0.88);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.94);
   color: #111827;
   box-shadow: 0 9px 24px rgba(16, 24, 38, 0.08);
-  font-size: 1.28rem;
-  font-weight: 500;
+  border: 1px solid rgba(214, 208, 200, 0.88);
+  font-size: 1.06rem;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.quiz-stage--email .back-button::before {
-  font-size: 1.16rem;
+.quiz-stage--email .restart-quiz-button:hover,
+.quiz-stage--email .restart-quiz-button:focus-visible {
+  transform: translateY(-2px);
+  outline: none;
 }
 
 .question-title--email {
   max-width: min(1280px, calc(100vw - 64px));
-  font-size: clamp(3.5rem, 4.75vw, 5rem);
+  font-size: clamp(3.2rem, 4.35vw, 4.55rem);
   line-height: 1.02;
   color: #111b2b;
   text-align: center;
@@ -498,10 +506,10 @@ button {
 }
 
 .question-subtext--email {
-  margin: 18px 0 27px;
+  margin: 13px 0 24px;
   max-width: none;
   color: #687384;
-  font-size: 1.46rem;
+  font-size: 1.34rem;
   line-height: 1.28;
   text-align: center;
 }
@@ -521,8 +529,8 @@ button {
 
 .quiz-stage--email .lead-form {
   width: min(880px, calc(100% - 48px));
-  gap: 18px;
-  padding: 36px 54px 28px;
+  gap: 14px;
+  padding: 30px 54px 22px;
   border: 0;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.9);
@@ -550,7 +558,7 @@ button {
 
 .quiz-stage--email .input-row {
   grid-template-columns: 1fr;
-  gap: 22px;
+  gap: 18px;
 }
 
 .email-input {
@@ -566,7 +574,7 @@ button {
 }
 
 .quiz-stage--email .email-input {
-  min-height: 66px;
+  min-height: 58px;
   padding: 0 22px;
   border: 1.5px solid #d9cec2;
   border-radius: 14px;
@@ -604,7 +612,7 @@ button {
 }
 
 .quiz-stage--email .primary-button {
-  min-height: 70px;
+  min-height: 62px;
   width: 100%;
   border-radius: 14px;
   background: linear-gradient(180deg, #111d2d 0%, #071225 100%);
@@ -650,7 +658,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-top: 4px;
+  margin-top: 0;
   color: #6b7484;
   font-size: 1.18rem;
   line-height: 1.35;
@@ -702,6 +710,47 @@ button {
   height: 1px;
   opacity: 0;
   pointer-events: none;
+}
+
+.quiz-stage--processing {
+  grid-template-rows: auto minmax(0, 1fr);
+  justify-items: center;
+}
+
+.processing-shell {
+  width: min(720px, 100%);
+  min-height: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.processing-spinner {
+  width: 58px;
+  height: 58px;
+  border: 5px solid rgba(26, 34, 48, 0.14);
+  border-top-color: #111825;
+  border-radius: 50%;
+  animation: processing-spin 850ms linear infinite;
+}
+
+.question-title--processing {
+  max-width: 780px;
+  font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+}
+
+.question-subtext--processing {
+  text-align: center;
+}
+
+@keyframes processing-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .quiz-stage--success {
@@ -858,6 +907,7 @@ button {
   }
 
   .question-title--email {
+    font-size: clamp(1.95rem, 8.4vw, 2.7rem);
     white-space: normal;
   }
 
@@ -901,8 +951,81 @@ button {
   }
 
   .email-background-image {
-    width: min(620px, 100%);
+    width: 100%;
+    height: min(62vh, 520px);
+    object-position: center 58%;
     opacity: 0.84;
+  }
+
+  .quiz-stage--email {
+    padding: 78px 12px 0;
+  }
+
+  .quiz-stage--email .question-meta {
+    top: 12px;
+    padding: 0 12px;
+    grid-template-columns: 92px 1fr 92px;
+  }
+
+  .quiz-stage--email .question-meta-center {
+    gap: 7px;
+    padding-top: 4px;
+  }
+
+  .quiz-stage--email .step-counter {
+    font-size: 0.9rem;
+  }
+
+  .quiz-stage--email .progress-bar {
+    gap: 6px;
+  }
+
+  .quiz-stage--email .progress-segment {
+    width: 24px;
+    height: 4px;
+  }
+
+  .quiz-stage--email .restart-quiz-button {
+    min-height: 40px;
+    padding: 0 12px;
+    border-radius: 18px;
+    font-size: 0.78rem;
+  }
+
+  .question-subtext--email {
+    margin: 8px 0 12px;
+    font-size: 0.94rem;
+  }
+
+  .quiz-stage--email .lead-form {
+    width: min(100%, calc(100% - 8px));
+    gap: 10px;
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .quiz-stage--email .field-label {
+    font-size: 0.92rem;
+  }
+
+  .quiz-stage--email .input-row {
+    gap: 10px;
+  }
+
+  .quiz-stage--email .email-input,
+  .quiz-stage--email .primary-button {
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 0.98rem;
+  }
+
+  .quiz-stage--email .privacy-note {
+    gap: 8px;
+    font-size: 0.84rem;
+  }
+
+  .question-title--processing {
+    font-size: clamp(2rem, 7.8vw, 2.7rem);
   }
 
   .lead-form,
@@ -971,5 +1094,38 @@ button {
 
   .lead-form {
     padding: 14px;
+  }
+
+  .quiz-stage--email {
+    padding-top: 88px;
+  }
+
+  .quiz-stage--email .question-meta {
+    top: 14px;
+  }
+
+  .quiz-stage--email .question-meta-center {
+    padding-top: 14px;
+  }
+
+  .question-title--email {
+    font-size: clamp(2.85rem, 4vw, 4rem);
+  }
+
+  .question-subtext--email {
+    margin: 10px 0 14px;
+  }
+
+  .quiz-stage--email .lead-form {
+    gap: 12px;
+    padding: 22px 44px 18px;
+  }
+
+  .quiz-stage--email .email-input {
+    min-height: 52px;
+  }
+
+  .quiz-stage--email .primary-button {
+    min-height: 56px;
   }
 }

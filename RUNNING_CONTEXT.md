@@ -5,9 +5,9 @@
 - Project: `ZanesImprovmentQuiz`, a Next.js quiz website.
 - Standing user instruction: keep this running context document updated as work continues, adding each user message verbatim and logging assistant actions, decisions, rationale summaries, context, touched files, and verification results.
 - Important boundary: user requested assistant thought process verbatim; this document will instead capture concise high-level reasoning summaries and implementation rationale, not hidden chain-of-thought.
-- Current task status: user reports Resend, GitHub token storage, and Vercel env vars have been configured by Gemini; current goal is to put local code/docs together so project is fully ready for testing, then commit/push/deploy.
-- Files touched so far: `RUNNING_CONTEXT.md`, `EMAIL_SETUP.md`, `README.md`, `lib/email.js`.
-- Verification: `npm run build` passes. Local `/api/leads` smoke test on port 3001 returned `ok: true`, saved locally, generated a full profile, and skipped real email because `RESEND_API_KEY` is not configured in local development.
+- Current task status: final requested UI/flow fixes are implemented locally and passed build plus browser smoke checks; next step is commit/push and production verification.
+- Files touched so far: `RUNNING_CONTEXT.md`, `EMAIL_SETUP.md`, `README.md`, `lib/email.js`, `lib/quiz-data.js`, `components/quiz-app.jsx`, `app/globals.css`.
+- Verification: `npm run build` passes. Local browser smoke check on port 3002 confirmed the skip pill is gone, page 7 is centered, the processing screen appears after page 7, page 8 has Restart quiz and no Back button, the page 8 form is not cut off, and the background person is visible.
 
 ## Locked Decisions
 
@@ -19,9 +19,9 @@
 
 ## Active Workstreams
 
-- Finalize production-readiness with the new infrastructure assumptions from Gemini.
-- Commit/push current local changes.
-- Trigger/confirm Vercel redeploy path for testing.
+- Finish the final UI/flow fixes requested by the user.
+- Build and visually smoke-check the quiz.
+- Commit/push to GitHub and confirm Vercel production responds after deployment.
 - Future improvement candidate: add a dedicated test script or admin-only smoke endpoint for confirming email/storage configuration after deployment.
 
 ## Open Questions
@@ -261,3 +261,68 @@ Assistant rationale summary:
 - The previous `RESEND_FROM_EMAIL=onboarding@resend.dev` value was the main mismatch with the verified sender domain. The code guard prevents that placeholder from blocking realistic email testing even if Vercel still has the placeholder value.
 - The production smoke test proves the full path is working: deployed frontend/API reachable, Resend sending accepted, GitHub storage accepted, and personalized profile returned.
 - Production storage is currently writing lead data into the app repo's `main` branch because that is how Gemini configured `GITHUB_STORAGE_REPO` and `GITHUB_STORAGE_BRANCH`. This is workable for testing, but a private dedicated leads repo or dedicated non-deploy branch remains cleaner long term.
+
+### 2026-04-27 - User Requests Skip Button Removal And Final Page Fix
+
+User message, verbatim:
+
+> get rid of this button, and fix the page 8 because it looks cut off and dosen't show the outline of the guy in the backround. i showed you exactly how it should look and u did it differently.
+>
+> [User attached a screenshot of the wide pill button `I’m not sure. Let’s skip it.` and a screenshot of page 8 showing the form card cut off at the bottom with the background person silhouette not visible.]
+
+Assistant message, verbatim:
+
+> I’ll fix those two things tightly: remove the wide “I’m not sure. Let’s skip it.” pill option, then rework the final-page spacing/background crop so the full card fits and the centered person silhouette is visible like your reference. I’ll log this in the running context and verify before shipping.
+
+Assistant actions planned:
+
+- Remove the `skip` pill option from the status step.
+- Adjust final page email-capture CSS so the progress/title/form are higher, the card fits in the viewport, and the background image is framed to reveal the centered person/stairway.
+
+Assistant rationale summary:
+
+- The wide skip pill is defined as a pill option in quiz data, so the cleanest scoped fix is to remove that option from the relevant step rather than hiding all pill UI globally.
+- The final page issue is layout/crop related, not email logic related, so changes should stay in the final-page CSS and background framing.
+
+Additional user messages, verbatim:
+
+> then ship everything once ur done.
+
+> also make a processing from page 7 to 8 screen  and then no back button on page 8. there is a "restart the quiz" button on page 8 tho
+
+Assistant message, verbatim:
+
+> Yep, I’ll include those latest changes too: a processing interstitial after the page 7 choice, no Back button on page 8, a Restart quiz button there instead, then build, test, commit, push, and confirm production.
+
+Updated implementation plan:
+
+- Remove the status-step skip pill.
+- Add a processing interstitial between page 7 and the email-capture page.
+- Replace the page 8 Back button with a Restart quiz button.
+- Keep the existing success-page restart behavior.
+- Reframe/fix page 8 so the full form card fits and the person silhouette in the background is visible.
+- Build, smoke-check, commit, push, and verify production.
+
+Implementation actions taken:
+
+- Removed the `skip` option from `lib/quiz-data.js`, which removes the wide `I’m not sure. Let’s skip it.` pill from the status page.
+- Updated `components/quiz-app.jsx` to show a short processing interstitial after the page 7 answer before page 8 appears.
+- Updated `components/quiz-app.jsx` so page 8 no longer renders a Back button and instead renders a `Restart quiz` button.
+- Adjusted `app/globals.css` final-page spacing, card sizing, button styling, background height/crop, and responsive rules to keep the email form inside the viewport and reveal more of the centered stairway/person background.
+
+Assistant rationale summary:
+
+- The processing screen is controlled in React state rather than represented as a ninth quiz step, so the quiz still remains an 8-step flow and email capture is still page 8.
+- Restart on page 8 clears answers, email, pending processing state, and local storage, matching the existing success-page restart behavior.
+
+Verification results:
+
+- Ran `npm run build`; it passed.
+- Ran local Next dev server on `http://127.0.0.1:3002`.
+- Browser-smoked the full flow through page 8 at `1680x945`.
+- Confirmed page 2 no longer contains `I’m not sure. Let’s skip it.`
+- Confirmed page 7 rendered three evenly sized cards with the middle `Fixing my discipline` card centered.
+- Confirmed selecting page 7 shows `Building your personalized plan` before page 8.
+- Confirmed page 8 button list is `Restart quiz` and `Get My Plan`, with no `Back` button.
+- Confirmed page 8 form geometry fits in viewport: lead form top `332.7`, bottom `598.2`, viewport height `945`.
+- Confirmed the local screenshot shows the centered background person/stairway visible below the form.

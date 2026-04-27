@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useState, useTransition } from "react";
+import { startTransition, useEffect, useRef, useState, useTransition } from "react";
 import { track } from "@vercel/analytics";
 
 import { quizSteps } from "@/lib/quiz-data";
@@ -10,6 +10,8 @@ const STORAGE_KEY = "zanesbestlife-quiz-state";
 const ANSWER_STEP_IDS = quizSteps
   .filter((step) => step.kind !== "email")
   .map((step) => step.id);
+const FINAL_ANSWER_STEP_ID = ANSWER_STEP_IDS[ANSWER_STEP_IDS.length - 1];
+const PROCESSING_DELAY_MS = 1200;
 
 function getStoredState() {
   if (typeof window === "undefined") {
@@ -80,8 +82,8 @@ function PillOption({ option, selected, onSelect }) {
 
 function FinalStep({
   email,
-  onBack,
   onEmailChange,
+  onRestart,
   onSubmit,
   error,
   isPending,
@@ -99,8 +101,8 @@ function FinalStep({
       />
 
       <div className="question-meta">
-        <button className="back-button" onClick={onBack} type="button">
-          Back
+        <button className="restart-quiz-button" onClick={onRestart} type="button">
+          Restart quiz
         </button>
         <div className="question-meta-center">
           <span className="step-counter">8 of 8</span>
@@ -150,6 +152,29 @@ function FinalStep({
         </p>
         {error ? <p className="form-error">{error}</p> : null}
       </form>
+    </section>
+  );
+}
+
+function ProcessingStep() {
+  return (
+    <section className="quiz-stage quiz-stage--processing" key="processing">
+      <div className="question-meta">
+        <span />
+        <div className="question-meta-center">
+          <span className="step-counter">Preparing your plan</span>
+          <ProgressBar currentStep={6} />
+        </div>
+        <span />
+      </div>
+
+      <div className="processing-shell" aria-live="polite" role="status">
+        <span className="processing-spinner" aria-hidden="true" />
+        <h1 className="question-title question-title--processing">Building your personalized plan</h1>
+        <p className="question-subtext question-subtext--processing">
+          Analyzing your answers and getting your results ready.
+        </p>
+      </div>
     </section>
   );
 }
@@ -213,7 +238,9 @@ export function QuizApp() {
   const [error, setError] = useState("");
   const [submittedProfile, setSubmittedProfile] = useState(null);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isProcessingFinal, setIsProcessingFinal] = useState(false);
   const [isPending, startSubmitTransition] = useTransition();
+  const processingTimeoutRef = useRef(null);
 
   useEffect(() => {
     const stored = getStoredState();
@@ -232,7 +259,15 @@ export function QuizApp() {
   }, []);
 
   useEffect(() => {
-    if (!hasLoaded || submittedProfile) {
+    return () => {
+      if (processingTimeoutRef.current) {
+        window.clearTimeout(processingTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoaded || submittedProfile || isProcessingFinal) {
       return;
     }
 
@@ -244,7 +279,7 @@ export function QuizApp() {
         stepIndex
       })
     );
-  }, [answers, email, hasLoaded, stepIndex, submittedProfile]);
+  }, [answers, email, hasLoaded, isProcessingFinal, stepIndex, submittedProfile]);
 
   const currentStep = quizSteps[stepIndex];
   const isEmailStep = currentStep.kind === "email";
@@ -254,7 +289,7 @@ export function QuizApp() {
   const pillOptions = currentStep.options?.filter((option) => option.emphasis === "pill") || [];
 
   useEffect(() => {
-    if (!hasLoaded || submittedProfile) {
+    if (!hasLoaded || submittedProfile || isProcessingFinal) {
       return;
     }
 
@@ -262,9 +297,13 @@ export function QuizApp() {
       step: currentStep.stepNumber,
       stepId: currentStep.id
     });
-  }, [currentStep.id, currentStep.stepNumber, hasLoaded, submittedProfile]);
+  }, [currentStep.id, currentStep.stepNumber, hasLoaded, isProcessingFinal, submittedProfile]);
 
   function handleSelect(optionId) {
+    if (isProcessingFinal) {
+      return;
+    }
+
     setError("");
     track("Quiz Answer Selected", {
       optionId,
@@ -272,18 +311,38 @@ export function QuizApp() {
       stepId: currentStep.id
     });
 
+    const isFinalAnswerStep = currentStep.id === FINAL_ANSWER_STEP_ID;
+
     startTransition(() => {
       setAnswers((previous) => ({
         ...previous,
         [currentStep.id]: optionId
       }));
 
-      setStepIndex((previous) => Math.min(previous + 1, quizSteps.length - 1));
+      if (!isFinalAnswerStep) {
+        setStepIndex((previous) => Math.min(previous + 1, quizSteps.length - 1));
+      }
     });
+
+    if (isFinalAnswerStep) {
+      setIsProcessingFinal(true);
+
+      if (processingTimeoutRef.current) {
+        window.clearTimeout(processingTimeoutRef.current);
+      }
+
+      processingTimeoutRef.current = window.setTimeout(() => {
+        startTransition(() => {
+          setStepIndex((previous) => Math.min(previous + 1, quizSteps.length - 1));
+          setIsProcessingFinal(false);
+        });
+        processingTimeoutRef.current = null;
+      }, PROCESSING_DELAY_MS);
+    }
   }
 
   function handleBack() {
-    if (submittedProfile || stepIndex === 0) {
+    if (submittedProfile || isProcessingFinal || stepIndex === 0) {
       return;
     }
 
@@ -295,12 +354,18 @@ export function QuizApp() {
   }
 
   function handleRestart() {
+    if (processingTimeoutRef.current) {
+      window.clearTimeout(processingTimeoutRef.current);
+      processingTimeoutRef.current = null;
+    }
+
     setAnswers({});
     setStepIndex(0);
     setEmail("");
     setWebsite("");
     setError("");
     setSubmittedProfile(null);
+    setIsProcessingFinal(false);
     window.localStorage.removeItem(STORAGE_KEY);
   }
 
@@ -370,13 +435,15 @@ export function QuizApp() {
             onRestart={handleRestart}
             profile={submittedProfile}
           />
+        ) : isProcessingFinal ? (
+          <ProcessingStep />
         ) : isEmailStep ? (
           <FinalStep
             email={email}
             error={error}
             isPending={isPending}
-            onBack={handleBack}
             onEmailChange={setEmail}
+            onRestart={handleRestart}
             onSubmit={handleSubmit}
             onWebsiteChange={setWebsite}
             website={website}

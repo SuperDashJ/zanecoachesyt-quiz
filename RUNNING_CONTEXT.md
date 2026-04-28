@@ -30,6 +30,89 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Provides Exact Email Copy Template
+
+User message, verbatim:
+
+> here is the copy tempelate for the email delivered to them, and it should just change the inputs depending on what they clicked in the quiz obviously. and it should use the same visual format and even images as the website used. use same images that they clicked (or at least a couple of them) and same visual feel and color pallate all that as the website. here is the copy (impliment this and ship it): Subject: Your reset plan
+>
+> Here’s your result.
+>
+> Score: [X]/5
+> Biggest priority: [Money / Fitness / Social]
+> Biggest blocker: [Screens / Junk food / Lack of motivation]
+> Best-fit change style: [Huge reset / Small habits / Balanced change]
+> Daily capacity: [5 / 15 / 30+ minutes]
+>
+> What this means
+>
+> Right now, you do not need more advice.
+> You need a simple plan you will actually follow.
+>
+> Your biggest priority is [PRIORITY], but [BLOCKER] is getting in the way.
+> The best move is a [STYLE] plan built around [TIME] a day.
+>
+> Your first 3 moves
+>
+> 1. [Move 1]
+> 2. [Move 2]
+> 3. [Move 3]
+>
+> Your 7-day reset
+>
+> Days 1 to 2
+> [Cut the biggest source of friction]
+>
+> Days 3 to 4
+> [Start the smallest useful action]
+>
+> Days 5 to 7
+> [Repeat it daily and keep it simple]
+>
+> Bad-day version
+>
+> If the day feels off, do this instead:
+> - [5-minute version]
+> - [One rule]
+> - [One thing to avoid]
+>
+> If you follow this for the next 7 to 14 days, you should feel more in control, less scattered, and more consistent in the part of life that matters most right now.
+>
+> Pro tip
+>
+> Paste this email into AI and ask it to hold you accountable, check in with you every day, and help you stick to the plan.
+>
+> - Zane
+
+Assistant message, verbatim:
+
+> I’ll replace the current email body with this copy as the actual template, while keeping it dynamic from the quiz answers. I’ll also bring over the site’s visual feel and selected quiz images into the HTML email, then build, production-test, commit, and push.
+
+Implementation actions in progress:
+
+- Replace the email subject with `Your reset plan`.
+- Rebuild `lib/email.js` around the provided copy for both HTML and plaintext email.
+- Use dynamic quiz-derived fields for score out of 5, priority, blocker, change style, time, first moves, 7-day reset, and bad-day version.
+- Add selected quiz images to the HTML email using the same image assets and color palette as the website.
+- Add `statusScore` to `buildLeadProfile` so the email can show the selected 1-5 score directly.
+
+Implementation actions taken:
+
+- Replaced the old `lib/email.js` report with the user's provided copy structure.
+- Set the email subject to exactly `Your reset plan`.
+- Added selected-image cards for priority, blocker, and change style using the same image files served by the website.
+- Kept the website visual language in the email: serif brand/header, warm off-white background, navy accents, rounded cards, and restrained borders.
+- Added dynamic helper copy for `Your first 3 moves`, `Your 7-day reset`, and `Bad-day version` based on the quiz-derived profile.
+- Added `statusScore` to `lib/quiz-logic.js` so email score displays as the selected quiz score out of 5.
+- Adjusted blocker sentence grammar so plural/phrase blockers read naturally, for example `screens are getting in the way`.
+
+Verification so far:
+
+- Generated a sample email report locally and confirmed subject is `Your reset plan`.
+- Confirmed plaintext starts with the requested template fields, including `Score: 3/5`, `Biggest priority: Money`, `Biggest blocker: Screens`, `Best-fit change style: Small habits`, and `Daily capacity: 15 minutes`.
+- Confirmed the generated HTML includes website image assets for the selected priority, blocker, and style.
+- Ran `npm run build`; it passed.
+
 ### 2026-04-27 - User Requests Email-Only Success Page And Email Delivery Audit
 
 User message, verbatim:

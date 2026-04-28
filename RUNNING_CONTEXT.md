@@ -30,6 +30,44 @@
 
 ## Activity Log
 
+### 2026-04-27 - User Requests Email-Only Success Page And Email Delivery Audit
+
+User message, verbatim:
+
+> this should just say "we are delivering your plan, it will be in your inbox within {insert how much time it wil take to be delivered}" on that page. it shouldn'g give you any of your plan here. just email it to you.
+>
+> [User attached a screenshot of the success/results page showing score, priorities, blocker, and plan preview.]
+
+Assistant message, verbatim:
+
+> I’ll simplify that post-submit page so it becomes a delivery confirmation only: no score, no priorities, no blocker, no action-plan preview. I’ll log the new request first, then patch the success component and verify it builds.
+
+User message, verbatim:
+
+> also, im not getting the email of my results when testing, make sure it acutally works! after u finish what ur working on rn ofc
+
+Assistant message, verbatim:
+
+> Got it. I’ve already stripped the on-page results preview down to a delivery message; next I’ll audit the email path itself and run a real production submission check so we’re not just trusting the UI.
+
+Implementation actions in progress:
+
+- Replace the success/results screen with a delivery-only confirmation.
+- Audit the Resend email-sending path and production API response.
+- Run build and a real production email smoke check after the UI change.
+
+Implementation actions taken:
+
+- Replaced the success/results page in `components/quiz-app.jsx` with a delivery-only confirmation: `We are delivering your plan.` and `It will be in your inbox within 2-5 minutes.`
+- Removed all on-page score, priority, blocker, and action-plan rendering from the post-submit UI. The generated plan remains available to the email template and API payload only.
+- Added `.delivery-card` styles in `app/globals.css`.
+- Audited `app/api/leads/route.js` and `lib/email.js`; production requests return `502` if Resend fails, and only successful Resend API responses produce `emailDelivery.ok: true`.
+
+Verification so far:
+
+- Ran `npm run build`; it passed.
+- Confirmed `components/quiz-app.jsx` no longer contains the old post-submit plan-preview text or `profile.score`/`profile.plan` rendering.
+
 ### 2026-04-27 - Initial Request And Setup
 
 User message, verbatim:

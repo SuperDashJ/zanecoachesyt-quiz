@@ -179,52 +179,19 @@ function ProcessingStep() {
   );
 }
 
-function SuccessState({ profile, email, emailDelivery, onRestart }) {
+function SuccessState({ onRestart }) {
   return (
     <section className="quiz-stage quiz-stage--success">
-      <div className="question-meta">
-        <span className="step-counter">Saved</span>
-      </div>
+      <div className="delivery-card" role="status" aria-live="polite">
+        <span className="delivery-label">Saved</span>
+        <h1 className="question-title question-title--success">We are delivering your plan.</h1>
+        <p className="question-subtext question-subtext--success">
+          It will be in your inbox within 2-5 minutes.
+        </p>
 
-      <div className="success-shell">
-        <div className="success-score">
-          <span className="success-score-label">Reset score</span>
-          <strong>{profile.score}</strong>
-          <span>{profile.scoreLabel}</span>
-        </div>
-
-        <div className="success-copy">
-          <h1 className="question-title question-title--success">Your reset plan is saved.</h1>
-          <p className="question-subtext">
-            {emailDelivery?.ok
-              ? `Your full report was emailed to ${email}.`
-              : `${email} is now tied to your quiz answers, priorities, blockers, and custom reset plan.`}
-          </p>
-
-          <div className="success-panels">
-            <div className="success-panel">
-              <span className="success-panel-label">Biggest priorities</span>
-              <strong>{profile.priorities.filter(Boolean).join(" + ")}</strong>
-            </div>
-            <div className="success-panel">
-              <span className="success-panel-label">Main blocker</span>
-              <strong>{profile.blocker || "Needs more data"}</strong>
-            </div>
-          </div>
-
-          <div className="plan-list">
-            {profile.plan.map((item) => (
-              <div className="plan-item" key={item}>
-                <span className="plan-bullet" />
-                <p>{item}</p>
-              </div>
-            ))}
-          </div>
-
-          <button className="secondary-button" onClick={onRestart} type="button">
-            Take the quiz again
-          </button>
-        </div>
+        <button className="secondary-button" onClick={onRestart} type="button">
+          Take the quiz again
+        </button>
       </div>
     </section>
   );
@@ -430,10 +397,7 @@ export function QuizApp() {
       <main className="page-shell">
         {submittedProfile ? (
           <SuccessState
-            email={email}
-            emailDelivery={submittedProfile.emailDelivery}
             onRestart={handleRestart}
-            profile={submittedProfile}
           />
         ) : isProcessingFinal ? (
           <ProcessingStep />

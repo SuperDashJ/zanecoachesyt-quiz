@@ -5,9 +5,9 @@
 - Project: `ZanesImprovmentQuiz`, a Next.js quiz website.
 - Standing user instruction: keep this running context document updated as work continues, adding each user message verbatim and logging assistant actions, decisions, rationale summaries, context, touched files, and verification results.
 - Important boundary: user requested assistant thought process verbatim; this document will instead capture concise high-level reasoning summaries and implementation rationale, not hidden chain-of-thought.
-- Current task status: the latest email-template request is implemented, built, pushed to GitHub, deployed on Vercel, and production-smoked through the live `/api/leads` endpoint.
+- Current task status: the latest YouTube email-footer link request is implemented, built, pushed to GitHub, deployed on Vercel, and production-smoked through the live `/api/leads` endpoint.
 - Files touched so far: `RUNNING_CONTEXT.md`, `EMAIL_SETUP.md`, `README.md`, `lib/email.js`, `lib/quiz-data.js`, `components/quiz-app.jsx`, `app/globals.css`.
-- Verification: `npm run build` passes. Production `https://zanesquiz.com` returns HTTP 200. Production `/api/leads` accepted a live test lead and Resend accepted the email with preview `Here’s where you are. Your bare minimum daily actions are inside.`
+- Verification: `npm run build` passes. Production `/api/leads` accepted a live test lead and Resend accepted the email with preview `Here’s where you are. Your bare minimum daily actions are inside.`
 
 ## Locked Decisions
 
@@ -37,12 +37,21 @@ Assistant message, verbatim:
 
 > I’ll add a small YouTube link at the bottom of the email, keep it minimal so it doesn’t clutter the template, update the running context, then build and ship it.
 
-Implementation actions in progress:
+Implementation actions taken:
 
 - Add a bottom email link to `https://www.youtube.com/@zanesbestlife`.
 - Include the link in both HTML and plaintext email bodies.
 - Keep the placement below `- Zane`.
 - Build, commit, push, and verify.
+
+Verification:
+
+- Local email generation confirmed the YouTube URL is present in both HTML and plaintext.
+- `git diff --check` passed.
+- `npm run build` passed.
+- Pushed implementation commit `5e5b3a9` (`Add YouTube link to reset email`) to `main`.
+- Production `/api/leads` smoke test returned `ok: true`, `emailDelivery.ok: true`, subject `Your reset plan`, preview `Here’s where you are. Your bare minimum daily actions are inside.`, and Resend message id `ad5b9e60-3343-4a4c-ad14-26502895e882`.
+- Pulled the production lead-storage commit created by the smoke test.
 
 ### 2026-04-28 - User Requests Bare Minimum Daily Actions Email Section
 

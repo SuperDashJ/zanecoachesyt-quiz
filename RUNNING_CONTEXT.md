@@ -27,6 +27,23 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Requests YouTube Channel Link In Email
+
+User message, verbatim:
+
+> also add a link at the bottom to my channel like for more content/self improvement check out more videos https://www.youtube.com/@zanesbestlife
+
+Assistant message, verbatim:
+
+> I’ll add a small YouTube link at the bottom of the email, keep it minimal so it doesn’t clutter the template, update the running context, then build and ship it.
+
+Implementation actions in progress:
+
+- Add a bottom email link to `https://www.youtube.com/@zanesbestlife`.
+- Include the link in both HTML and plaintext email bodies.
+- Keep the placement below `- Zane`.
+- Build, commit, push, and verify.
+
 ### 2026-04-28 - User Requests Bare Minimum Daily Actions Email Section
 
 User message, verbatim:

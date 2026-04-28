@@ -27,6 +27,20 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Asks Whether Collected Emails Are Stored
+
+User message, verbatim:
+
+> are we currently storeing emails we collect from users who take the quiz and submit their email?
+
+Assistant actions and context:
+
+- Audited `app/api/leads/route.js` and confirmed submitted emails are validated, normalized with `trim().toLowerCase()`, included in the `lead` record, and passed to `saveLead`.
+- Audited `lib/storage.js` and confirmed production storage writes lead records to GitHub when `GITHUB_STORAGE_REPO` and `GITHUB_STORAGE_TOKEN` are configured.
+- Confirmed stored records include email, answers, generated profile, email-delivery status, source, IP address header, and user agent.
+- Confirmed local development stores to `data/leads-dev.ndjson` when GitHub storage env vars are absent.
+- Current production smoke tests have repeatedly returned `storage.mode: "github"`, repository `SuperDashJ/zanesbestlife-quiz`, branch `main`, and paths like `leads/2026-04/2026-04-28.ndjson`.
+
 ### 2026-04-28 - User Requests Clickable Headshot Bubble And Problem Section Removal
 
 User message, verbatim:

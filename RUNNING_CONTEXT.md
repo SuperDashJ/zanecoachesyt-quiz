@@ -112,6 +112,14 @@ Verification so far:
 - Confirmed plaintext starts with the requested template fields, including `Score: 3/5`, `Biggest priority: Money`, `Biggest blocker: Screens`, `Best-fit change style: Small habits`, and `Daily capacity: 15 minutes`.
 - Confirmed the generated HTML includes website image assets for the selected priority, blocker, and style.
 - Ran `npm run build`; it passed.
+- Committed the email template changes as `dabe032` with message `Update reset plan email template`.
+- Pushed `main` to GitHub.
+- Ran a real production `/api/leads` smoke test after deployment using `zanesquizresults@gmail.com`.
+- Production returned `ok: true`, stored the lead in GitHub storage, and returned `emailDelivery.ok: true`.
+- Resend accepted the production email with message id `d0e2d269-072d-40bd-b609-cadd830d0a7c`.
+- Production `emailDelivery.subject` is exactly `Your reset plan`.
+- Production `emailDelivery.preview` is `Here’s your result. Score: 4/5. Biggest priority: Money.`
+- Pulled the production lead-storage commit created by that smoke test; remote `main` advanced to `c4d209a`.
 
 ### 2026-04-27 - User Requests Email-Only Success Page And Email Delivery Audit
 

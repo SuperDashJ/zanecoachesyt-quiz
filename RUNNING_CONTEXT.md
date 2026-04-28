@@ -27,6 +27,32 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Requests Clickable Headshot Bubble And Problem Section Removal
+
+User message, verbatim:
+
+> instead of having it under the -zane have it above. include my headshot clickable image link and it should say before it "click for more self improvement videos" and it should be a pointing finger emoji to the headshot. all that in it's own bubble section in between the pro tip section and the "-zane" signature.  also, remove this section: "The problem
+> You care about Money.
+> But junk food is beating your current system.
+>
+> The move is not more motivation.
+> The move is a Huge reset plan you can do in 15 minutes a day."
+>
+> [User attached a screenshot of the current footer placement and an image of the headshot.]
+
+Assistant message, verbatim:
+
+> Got it. I’ll move the channel promo into its own bubble between Pro tip and `- Zane`, remove the whole “The problem” section, and use a clickable headshot image if there’s already a usable headshot asset in the repo.
+
+Implementation actions in progress:
+
+- Remove the `The problem` section from HTML and plaintext email bodies.
+- Move the channel promo above `- Zane`.
+- Put the channel promo in its own bubble between `Pro tip` and `- Zane`.
+- Use the public YouTube channel profile image as the clickable headshot image.
+- Add the text `Click for more self improvement videos 👉` before the image.
+- Build, commit, push, and verify.
+
 ### 2026-04-28 - User Requests YouTube Channel Link In Email
 
 User message, verbatim:

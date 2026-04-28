@@ -30,6 +30,23 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Requests Delivery Confirmation Copy Change
+
+User message, verbatim:
+
+> change this text "It will be in your inbox within 2-5 minutes.
+>
+> " to like find it in your inbox now or something similar like its in your inbox or it has been delivered. then ship change nothing elsle.
+
+Assistant message, verbatim:
+
+> Got it. I’ll make only that text change on the delivery confirmation page, log it, build, commit, push, and leave everything else alone.
+
+Implementation actions:
+
+- Changed the delivery confirmation subtext from `It will be in your inbox within 2-5 minutes.` to `Find it in your inbox now.`
+- No other app behavior or styling changes intended.
+
 ### 2026-04-28 - User Provides Exact Email Copy Template
 
 User message, verbatim:

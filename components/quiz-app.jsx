@@ -186,7 +186,7 @@ function SuccessState({ onRestart }) {
         <span className="delivery-label">Saved</span>
         <h1 className="question-title question-title--success">We are delivering your plan.</h1>
         <p className="question-subtext question-subtext--success">
-          It will be in your inbox within 2-5 minutes.
+          Find it in your inbox now.
         </p>
 
         <button className="secondary-button" onClick={onRestart} type="button">

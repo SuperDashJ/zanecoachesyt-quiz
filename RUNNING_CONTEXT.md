@@ -5,7 +5,7 @@
 - Project: `ZanesImprovmentQuiz`, a Next.js quiz website.
 - Standing user instruction: keep this running context document updated as work continues, adding each user message verbatim and logging assistant actions, decisions, rationale summaries, context, touched files, and verification results.
 - Important boundary: user requested assistant thought process verbatim; this document will instead capture concise high-level reasoning summaries and implementation rationale, not hidden chain-of-thought.
-- Current task status: the latest YouTube email-footer link request is implemented, built, pushed to GitHub, deployed on Vercel, and production-smoked through the live `/api/leads` endpoint.
+- Current task status: the latest clickable headshot email-bubble request is implemented, built, pushed to GitHub, deployed on Vercel, and production-smoked through the live `/api/leads` endpoint.
 - Files touched so far: `RUNNING_CONTEXT.md`, `EMAIL_SETUP.md`, `README.md`, `lib/email.js`, `lib/quiz-data.js`, `components/quiz-app.jsx`, `app/globals.css`.
 - Verification: `npm run build` passes. Production `/api/leads` accepted a live test lead and Resend accepted the email with preview `Here’s where you are. Your bare minimum daily actions are inside.`
 
@@ -44,7 +44,7 @@ Assistant message, verbatim:
 
 > Got it. I’ll move the channel promo into its own bubble between Pro tip and `- Zane`, remove the whole “The problem” section, and use a clickable headshot image if there’s already a usable headshot asset in the repo.
 
-Implementation actions in progress:
+Implementation actions taken:
 
 - Remove the `The problem` section from HTML and plaintext email bodies.
 - Move the channel promo above `- Zane`.
@@ -52,6 +52,18 @@ Implementation actions in progress:
 - Use the public YouTube channel profile image as the clickable headshot image.
 - Add the text `Click for more self improvement videos 👉` before the image.
 - Build, commit, push, and verify.
+
+Verification:
+
+- Fetched the public YouTube channel page and extracted the channel profile image URL from `yt3.googleusercontent.com`.
+- Local email generation confirmed the removed `The problem` copy is absent from HTML and plaintext.
+- Local email generation confirmed the CTA text, YouTube link, and clickable headshot image are present.
+- `git diff --check` passed.
+- `npm run build` passed.
+- Pushed implementation commit `8047df3` (`Add headshot channel bubble to email`) to `main`.
+- Production `https://zanesquiz.com` returned HTTP 200.
+- Production `/api/leads` smoke test returned `ok: true`, `emailDelivery.ok: true`, subject `Your reset plan`, preview `Here’s where you are. Your bare minimum daily actions are inside.`, and Resend message id `66309d01-cd2a-4df2-abe7-5f1cd9300bcc`.
+- Pulled the production lead-storage commit created by the smoke test.
 
 ### 2026-04-28 - User Requests YouTube Channel Link In Email
 

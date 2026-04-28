@@ -30,6 +30,162 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Replaces Email Copy Template Again And Says Always Ship
+
+User message, verbatim:
+
+> always ship. always ship! replace the format copy for the email copy with this: Subject: Your reset plan
+>
+> Here’s where you are.
+>
+> Score: [X]/5
+> Priority: [Money / Fitness / Social]
+> Blocker: [Screens / Junk food / Lack of motivation]
+> Style: [Huge reset / Small habits / Balanced change]
+> Time: [5 / 15 / 30+ minutes]
+>
+> The problem
+>
+> You care about [PRIORITY].
+> But [BLOCKER] is beating your current system.
+>
+> The move is not more motivation.
+> The move is a [STYLE] plan you can do in [TIME] a day.
+>
+> Do these first
+>
+> 1. [Cut the biggest source of friction]
+> 2. [Start one small action tied to your priority]
+> 3. [Repeat it at the same time every day]
+>
+> Your 7-day reset
+>
+> Days 1 to 2
+> [Remove the biggest drag]
+>
+> Days 3 to 4
+> [Start the smallest useful action]
+>
+> Days 5 to 7
+> [Keep the streak alive]
+> [Make it automatic]
+>
+> Bad-day rule
+>
+> If the day is bad:
+> - do the 5-minute version
+> - do it before scrolling
+> - do not miss twice
+>
+> What happens if you do this
+>
+> You get momentum back.
+> You stop guessing.
+> You start moving in the area that matters most.
+>
+> Pro tip
+>
+> Paste this email into AI and say:
+> Hold me accountable to this plan.
+> Check in with me every day.
+> Help me adjust if I fall off.
+>
+> - Zane and just insert like 2-3 images where needed appropriatley same images from the quiz! and it should all be cohesive and feel premium just like the website minimal dont overdo the design at all! and dont deviate at all from the copy, and with the insertions that are added based on the speciic inputs of they should follow these rules: Rules:
+> - Be concise.
+> - Be easy to scan.
+> - Use very simple language.
+> - Keep sentences short.
+> - Keep paragraphs short.
+> - Every line should add value.
+> - No fluff.
+> - No hype.
+> - No filler.
+> - No clichés.
+> - No motivational garbage.
+> - No vague advice.
+> - No repeated points.
+> - No fancy words when simple words work better.
+> - No extra sections unless asked.
+> - No branding text unless asked.
+> - No emojis.
+>
+> Tone:
+> - Direct
+> - Clear
+> - Useful
+> - Calm
+> - Blunt
+> - Action-focused
+>
+> Style:
+> - Start with the result fast.
+> - State the problem clearly.
+> - Turn the result into action fast.
+> - Make every action specific and practical.
+> - Make the plan feel doable.
+> - Make the copy feel tested, not poetic.
+>
+> Formatting:
+> - Clean section headers
+> - Short blocks of text
+> - Bullets only when useful
+> - Strong spacing
+> - No giant walls of text
+>
+> Action rules:
+> - Actions must be concrete.
+> - Actions must be easy to understand.
+> - Actions must be things someone can actually do today.
+> - Prefer one clear move over three weak moves.
+> - Make the bad-day version especially simple.
+>
+> Avoid words and phrases like:
+> - unlock
+> - transform
+> - journey
+> - level up
+> - powerful
+> - game changer
+> - supercharge
+> - insane
+> - crushing it
+> - optimize your life
+> - become your best self
+>
+> Good writing target:
+> It should sound like a smart coach who respects the reader’s time and only says what matters. then ship ur changes all.
+
+Assistant message, verbatim:
+
+> Understood. I’ll keep shipping as the default. First I’m going to sync the repo so the text change that’s already committed can land with the new email-template update instead of fighting the lead-storage commit on `main`.
+
+Implementation actions in progress:
+
+- Replace the email copy again with the exact requested section structure.
+- Keep subject as `Your reset plan`.
+- Keep the template minimal and remove extra branding copy from the email body.
+- Use only quiz-derived inputs and concise concrete action text.
+- Use 2-3 selected quiz images in the HTML email.
+- Ship the prior delivery-confirmation text commit plus this email-template update together.
+
+Implementation actions taken:
+
+- Replaced `lib/email.js` with the new requested email copy structure.
+- Removed the previous extra email copy such as `Here’s your result`, `What this means`, `Best-fit change style`, `Daily capacity`, and `Your first 3 moves`.
+- Removed visible brand/header text from the email body.
+- Kept the subject as `Your reset plan`.
+- Kept the HTML email minimal and premium: off-white background, white card, navy accents, restrained borders, short sections.
+- Included three selected quiz images when available: priority, blocker, and style.
+- Preserved concrete dynamic actions for friction removal, priority action, repeat timing, 7-day reset, and bad-day rules.
+
+Verification so far:
+
+- Generated a sample email locally and confirmed the plaintext starts with `Here’s where you are.`, `Score: 4/5`, `Priority: Money`, `Blocker: Screens`, `Style: Small habits`, and `Time: 15 minutes`.
+- Confirmed generated HTML includes selected quiz images for priority, blocker, and style.
+- Confirmed generated HTML does not include visible `zanesbestlife` brand text.
+- Confirmed old email section labels from the prior template are no longer present in `lib/email.js`.
+- Ran `npm run build`; it passed.
+
 ### 2026-04-28 - User Requests Delivery Confirmation Copy Change
 
 User message, verbatim:

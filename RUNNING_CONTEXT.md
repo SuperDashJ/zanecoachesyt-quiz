@@ -5,9 +5,9 @@
 - Project: `ZanesImprovmentQuiz`, a Next.js quiz website.
 - Standing user instruction: keep this running context document updated as work continues, adding each user message verbatim and logging assistant actions, decisions, rationale summaries, context, touched files, and verification results.
 - Important boundary: user requested assistant thought process verbatim; this document will instead capture concise high-level reasoning summaries and implementation rationale, not hidden chain-of-thought.
-- Current task status: final requested UI/flow fixes are implemented, built, browser-smoked, committed, pushed to GitHub, and verified in production assets on `https://zanesquiz.com`.
+- Current task status: the latest email-template request is implemented, built, pushed to GitHub, deployed on Vercel, and production-smoked through the live `/api/leads` endpoint.
 - Files touched so far: `RUNNING_CONTEXT.md`, `EMAIL_SETUP.md`, `README.md`, `lib/email.js`, `lib/quiz-data.js`, `components/quiz-app.jsx`, `app/globals.css`.
-- Verification: `npm run build` passes. Local browser smoke check on port 3002 confirmed the skip pill is gone, page 7 is centered, the processing screen appears after page 7, page 8 has Restart quiz and no Back button, the page 8 form is not cut off, and the background person is visible.
+- Verification: `npm run build` passes. Production `https://zanesquiz.com` returns HTTP 200. Production `/api/leads` accepted a live test lead and Resend accepted the email with preview `Here’s where you are. Your bare minimum daily actions are inside.`
 
 ## Locked Decisions
 
@@ -23,9 +23,6 @@
 
 ## Open Questions
 
-- Which email provider should be used in production: Resend, SendGrid, Postmark, AWS SES, SMTP, or another provider?
-- What exact sender domain/email address should be used?
-- Should the result email include the full on-page result/action plan, a shortened summary, or a branded HTML template?
 - Should lead storage stay GitHub-backed long term, or move to a database/CRM/email marketing tool later?
 
 ## Activity Log
@@ -54,14 +51,33 @@ Assistant message, verbatim:
 
 > I’m on it. I’ll remove that top score/priority/blocker/style/time card section from the email, replace the 7-day reset and bad-day rule with one `Bare minimum daily actions` section, make those actions rotate from the quiz answers, then build, test, commit, push, and production-smoke it.
 
-Implementation actions in progress:
+Implementation actions taken:
 
 - Remove the email's top metric-card section shown in the screenshot.
 - Remove `Your 7-day reset`.
 - Remove `Bad-day rule`.
 - Add `Bare minimum daily actions`.
 - Generate concise daily actions from selected priority, blocker, style, and time.
-- Ship after verification.
+- Keep 2-3 selected quiz images in the email so the visual feel stays aligned with the site.
+- Push the completed change to GitHub so Vercel can deploy it.
+
+Implementation details:
+
+- Added rotating bare-minimum actions derived from priority, blocker, style, and time.
+- Example Fitness + Junk food + Balanced change + 30+ minutes output: `Track your meals with AI.`, `Do a 10 minute workout.`, `Do one 30 minute focus block.`, `Do the same action at the same time.`
+- Removed the email's plaintext `Score`, `Priority`, `Blocker`, `Style`, and `Time` lines to match the requested removal of the card section.
+- Removed the HTML metric-card helpers and the old 7-day/bad-day helpers from `lib/email.js`.
+
+Verification:
+
+- Local sample email generation confirmed no metric lines, no `Your 7-day reset`, no `Bad-day rule`, and the presence of `Bare minimum daily actions`.
+- Local sample email confirmed the selected quiz images still render in the generated HTML.
+- `git diff --check` passed.
+- `npm run build` passed.
+- Pushed implementation commit `ac7b722` (`Replace reset sections with daily actions`) to `main`.
+- Production `/api/leads` smoke test returned `ok: true`, `emailDelivery.ok: true`, subject `Your reset plan`, preview `Here’s where you are. Your bare minimum daily actions are inside.`, and Resend message id `04db2866-8afc-48b8-b62d-41bf53887446`.
+- Production `https://zanesquiz.com` returned HTTP 200 after deployment.
+- Pulled the production lead-storage commit created by the smoke test.
 
 ### 2026-04-28 - User Replaces Email Copy Template Again And Says Always Ship
 

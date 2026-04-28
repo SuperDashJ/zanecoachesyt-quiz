@@ -30,6 +30,39 @@
 
 ## Activity Log
 
+### 2026-04-28 - User Requests Bare Minimum Daily Actions Email Section
+
+User message, verbatim:
+
+> remove this section. remove the 7-day reset and the bad day rule and replace with a "bare minimum daily actions" and they should just be like "track your meals with ai" "do a 10 minute workout" "set a 15 minute social media/screen limit" stuff like that super actionable and concice. and they ofc rotate based on what the user clicked in the quiz.
+>
+> then ship once u finish.
+>
+> [User attached a screenshot of the email's score/priority/blocker/style/time card section.]
+
+Latest repeated user message, verbatim:
+
+> remove this section. remove the 7-day reset and the bad day rule and replace with a "bare minimum daily actions" and they should just be like "track your meals with ai" "do a 10 minute workout" "set a 15 minute social media/screen limit" stuff like that super actionable and concice. and they ofc rotate based on what the user clicked in the quiz.
+> 1:51 PM
+>
+>
+> then ship once u finish.
+>
+> [User attached a screenshot of the email's score/priority/blocker/style/time card section.]
+
+Assistant message, verbatim:
+
+> I’m on it. I’ll remove that top score/priority/blocker/style/time card section from the email, replace the 7-day reset and bad-day rule with one `Bare minimum daily actions` section, make those actions rotate from the quiz answers, then build, test, commit, push, and production-smoke it.
+
+Implementation actions in progress:
+
+- Remove the email's top metric-card section shown in the screenshot.
+- Remove `Your 7-day reset`.
+- Remove `Bad-day rule`.
+- Add `Bare minimum daily actions`.
+- Generate concise daily actions from selected priority, blocker, style, and time.
+- Ship after verification.
+
 ### 2026-04-28 - User Replaces Email Copy Template Again And Says Always Ship
 
 User message, verbatim:

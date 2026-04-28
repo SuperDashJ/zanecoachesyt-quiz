@@ -67,6 +67,13 @@ Verification so far:
 
 - Ran `npm run build`; it passed.
 - Confirmed `components/quiz-app.jsx` no longer contains the old post-submit plan-preview text or `profile.score`/`profile.plan` rendering.
+- Committed the delivery-only success page as `bd07842` with message `Simplify success delivery page`.
+- Pushed `main` to GitHub.
+- Ran a real production `/api/leads` submission to the email address shown in the user's screenshot.
+- Production returned `ok: true`, stored the lead through GitHub storage at `leads/2026-04/2026-04-28.ndjson`, and returned `emailDelivery.ok: true`.
+- Resend accepted the production email with message id `d51a8c2c-dda7-4acc-a981-25bb2b3eac90` and subject `Your ZANESBESTLIFE reset plan: 56/100`.
+- Confirmed deployed production JS contains the delivery-only text `We are delivering your plan.` and `It will be in your inbox within 2-5 minutes.`
+- Pulled the lead-storage commit created by the production smoke test; remote `main` advanced to `6fb567a`.
 
 ### 2026-04-27 - Initial Request And Setup
 

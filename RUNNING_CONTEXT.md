@@ -185,6 +185,16 @@ Verification so far:
 - Confirmed generated HTML does not include visible `zanesbestlife` brand text.
 - Confirmed old email section labels from the prior template are no longer present in `lib/email.js`.
 - Ran `npm run build`; it passed.
+- Rebased over production lead-storage commits and pushed both local commits to GitHub:
+  - `ba01e71` `Update delivery confirmation copy`
+  - `25dce3e` `Replace reset email copy`
+- Ran a real production `/api/leads` smoke test after deployment using `zanesquizresults@gmail.com`.
+- Production returned `ok: true`, stored the lead in GitHub storage, and returned `emailDelivery.ok: true`.
+- Resend accepted the production email with message id `7238543c-17ba-4e2a-8fdc-b7a35069a1ea`.
+- Production `emailDelivery.subject` is exactly `Your reset plan`.
+- Production `emailDelivery.preview` is `Here’s where you are. Score: 5/5. Priority: Fitness.`
+- Confirmed the deployed frontend bundle includes `Find it in your inbox now.`
+- Pulled the production lead-storage commit created by the smoke test; remote `main` advanced to `6b4032b`.
 
 ### 2026-04-28 - User Requests Delivery Confirmation Copy Change
 

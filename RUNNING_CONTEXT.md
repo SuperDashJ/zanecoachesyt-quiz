@@ -5,7 +5,7 @@
 - Project path: `/home/dashi/ZaneYTQuiz`
 - Project type: Next.js quiz funnel.
 - Current branch: `main`
-- Current local state: rebrand work is being shipped to the new GitHub/Vercel setup.
+- Current shipping state: code is pushed to the new GitHub app repo and deployed on Vercel production.
 - User has provided the new GitHub repo, lead repo, Resend sender, and Vercel env values. Secrets are intentionally redacted in this log.
 - Current brand target: `ZaneCoachesYT`
 - YouTube channel link for email CTA: `https://www.youtube.com/@ZaneCoachesYoutube`
@@ -16,6 +16,9 @@
 - Target Vercel project slug: `zanecoachesyt-quiz`.
 - Target site URL: `https://zanecoachesyt-quiz.vercel.app`.
 - Resend sender: `ZaneCoachesYT <results@mail.zanecoachesyt.com>`.
+- Current live status: homepage returns HTTP 200 at `https://zanecoachesyt-quiz.vercel.app`.
+- Current lead status: live `/api/leads` saves to GitHub storage successfully.
+- Current email status: Resend rejects live email sends because `mail.zanecoachesyt.com` is not verified yet. The user needs to finish Resend domain verification/DNS before going fully live.
 - Important boundary: the user asked to record assistant thought process verbatim. This file records verbatim visible user/assistant messages, implementation rationale, decisions, actions, and verification results. It does not record hidden private chain-of-thought.
 
 ## Current Implementation State
@@ -100,6 +103,16 @@
   - `curl` could not connect afterward because the dev server process was no longer reachable from the later command context.
   - Browser screenshot verification was therefore not completed in this turn.
 - Latest secret scan found no real GitHub PAT or Resend API key committed in repo files; only placeholders such as `github_pat_xxx` and `re_xxx` appear in docs.
+- Git remote `origin` points to `git@github.com:SuperDashJ/zanecoachesyt-quiz.git`.
+- Pushed commits:
+  - `efd70f7 Rebrand quiz for ZaneCoachesYT`
+  - `35dfb2d Handle empty lead storage repo`
+  - `a5c71c3 Bootstrap empty lead repo via contents API`
+- Vercel project `zanecoachesyt-quiz` is linked to the local checkout and has production env vars configured. Secret env values are stored as sensitive/encrypted values and are not written in this file.
+- Vercel production deployment completed and aliased `https://zanecoachesyt-quiz.vercel.app`.
+- Live homepage smoke test returned HTTP 200.
+- Live lead submission smoke test saved to `SuperDashJ/zanecoachesyt-leads` on branch `leads`, path `leads/2026-04/2026-04-29.ndjson`.
+- Live email smoke test failed only because Resend reported: `The mail.zanecoachesyt.com domain is not verified.`
 
 ## User Messages, Verbatim
 
@@ -145,6 +158,10 @@ User message, verbatim with secrets redacted:
 > RESEND_FROM_EMAIL=ZaneCoachesYT <results@mail.zanecoachesyt.com>
 > RESEND_REPLY_TO=results@mail.zanecoachesyt.com
 > NEXT_PUBLIC_SITE_URL=https://zanecoachesyt-quiz.vercel.app connect and ship everything and lmk when its ready for testing or if u need me to do anything.
+
+### Continue Request
+
+> continue
 
 ## Assistant Messages, Verbatim
 
@@ -216,6 +233,26 @@ User message, verbatim with secrets redacted:
 
 > I’m not going to commit the raw `imagestouse/` churn or Windows `:Zone.Identifier` files; those are source/drop artifacts and noisy. The shipped app only needs the new copied public assets under `public/quiz-assets/art/creator-*.png`, plus the code/docs changes.
 
+### Continue Deployment Update
+
+> I’m picking this back up at the deploy/test step. The code changes are already pushed; I’m going to wait on the queued Vercel build, then hit the live quiz API once it’s on the newest commit.
+
+### Vercel Build Update
+
+> The deployment has moved from queued into the actual Next build, so it’s alive. While that runs, I’m also checking the Vercel/log instructions I need for the last mile and the project log update.
+
+### Production Test Update
+
+> Production is now aliased to the clean URL. I’m doing the real smoke test now: page loads, lead writes to GitHub storage, and Resend accepts the results email.
+
+### Resend Blocker Update
+
+> The good news: the lead storage path is working now. The only remaining blocker is Resend saying `mail.zanecoachesyt.com` is not verified yet, so the app can save leads but cannot send the report email until that domain is verified in Resend/DNS.
+
+### Context Log Update
+
+> I’m updating `RUNNING_CONTEXT.md` with the final deployment state and the one remaining Resend/DNS blocker, with the keys still redacted. After that I’ll commit/push only that log update if it’s the only project file I touched.
+
 ## Implementation Rationale
 
 - Page 2 was left unchanged because the user explicitly requested that.
@@ -232,3 +269,6 @@ User message, verbatim with secrets redacted:
 - Card borders were removed because the provided image files already have strong edge/border styling and the user requested no double-border look.
 - Secrets provided by the user must be used only for Vercel configuration and smoke testing. Do not commit them to repo files.
 - The Git remote `origin` was repointed from `SuperDashJ/zanesbestlife-quiz` to `SuperDashJ/zanecoachesyt-quiz`.
+- Vercel deployment required setting the project framework to Next.js and production protection to allow the public `*.vercel.app` URL.
+- The empty private lead repo required a bootstrap path in `lib/storage.js` so the first lead can initialize GitHub storage using the Contents API before appending daily NDJSON lead files.
+- Resend API credentials are installed, but Resend will not send from `results@mail.zanecoachesyt.com` until `mail.zanecoachesyt.com` is verified in Resend.

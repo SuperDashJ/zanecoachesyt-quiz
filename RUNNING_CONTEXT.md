@@ -14,11 +14,12 @@
 - New GitHub app repo: `SuperDashJ/zanecoachesyt-quiz`.
 - New private lead repo: `SuperDashJ/zanecoachesyt-leads`.
 - Target Vercel project slug: `zanecoachesyt-quiz`.
-- Target site URL: `https://zanecoachesyt-quiz.vercel.app`.
-- Resend sender: `ZaneCoachesYT <results@mail.zanecoachesyt.com>`.
+- Target site URL: `https://zanecoachesyt.com` with `https://www.zanecoachesyt.com` also attached; Vercel fallback remains `https://zanecoachesyt-quiz.vercel.app`.
+- Resend sender: `ZaneCoachesYT <results@zanecoachesyt.com>`.
 - Current live status: homepage returns HTTP 200 at `https://zanecoachesyt-quiz.vercel.app`.
 - Current lead status: live `/api/leads` saves to GitHub storage successfully.
-- Current email status: Resend rejects live email sends because `mail.zanecoachesyt.com` is not verified yet. The user needs to finish Resend domain verification/DNS before going fully live.
+- Current email status: live Resend delivery succeeds from `ZaneCoachesYT <results@zanecoachesyt.com>`.
+- Current domain status: `https://zanecoachesyt.com` and `https://www.zanecoachesyt.com` return HTTP 200.
 - Vercel cleanup status: duplicate `zanecoachesyt-quiz-*`/temporary projects were deleted; the canonical project is `zanecoachesyt-quiz`.
 - Important boundary: the user asked to record assistant thought process verbatim. This file records verbatim visible user/assistant messages, implementation rationale, decisions, actions, and verification results. It does not record hidden private chain-of-thought.
 
@@ -114,6 +115,16 @@
 - Live homepage smoke test returned HTTP 200.
 - Live lead submission smoke test saved to `SuperDashJ/zanecoachesyt-leads` on branch `leads`, path `leads/2026-04/2026-04-29.ndjson`.
 - Live email smoke test failed only because Resend reported: `The mail.zanecoachesyt.com domain is not verified.`
+- Final email/domain fix:
+  - Vercel DNS showed Resend records on the root domain (`send`, `resend._domainkey`) and not on the `mail` sending subdomain.
+  - Added equivalent `mail`-subdomain records for `send.mail` and `resend._domainkey.mail`.
+  - Switched production `RESEND_FROM_EMAIL` to `ZaneCoachesYT <results@zanecoachesyt.com>`.
+  - Switched production `RESEND_REPLY_TO` to `results@zanecoachesyt.com`.
+  - Redeployed production so the new sender env values took effect.
+  - Live `/api/leads` test returned `ok: true`, saved to GitHub storage, and Resend returned an accepted email id.
+- Custom domains:
+  - `https://zanecoachesyt.com` returns HTTP 200.
+  - `https://www.zanecoachesyt.com` was added to the project and returns HTTP 200.
 - Vercel duplicate cleanup completed. Deleted:
   - `zanecoachesyt-quiz-v3`
   - `zanecoachesyt-quiz-new-123`
@@ -184,6 +195,10 @@ User message, verbatim with secrets redacted:
 ### Vercel Duplicate Cleanup Request
 
 > ok delete the duplicates.
+
+### Final Domain/Email Verification Request
+
+> i think the domain is all verified. confirm and ship it all and lmk when its ready for testing.
 
 ## Assistant Messages, Verbatim
 
@@ -299,6 +314,38 @@ User message, verbatim with secrets redacted:
 
 > The project list is clean now: only the real new quiz, the old self-improvement quiz, and unrelated projects remain. I’m logging that in `RUNNING_CONTEXT.md` so the handoff stays sane.
 
+### Final Verification Start
+
+> I’m going to confirm this from the outside like a real user would: hit the live site, submit a test lead, and check whether Resend accepts the email now. I’ll also make sure the canonical Vercel project is still the one serving production.
+
+### Domain Versus Email Status
+
+> The site/domain side is working: Vercel now shows `zanecoachesyt.com` as the production URL, and the Vercel project list is clean. The email test still failed with Resend’s exact same message: `mail.zanecoachesyt.com` is not verified, so this looks like the website domain is verified but the Resend sending domain still is not.
+
+### DNS Check
+
+> The root domain was purchased through Vercel and is attached correctly to the quiz. I’m checking the DNS records now because Resend needs its own records under that domain; root-site verification and email-sender verification are two different switches.
+
+### Mail DNS Fix
+
+> I can see what happened: the Resend DNS records are present, but they’re sitting on the root domain names (`send` and `resend._domainkey`) while the app is trying to send from `results@mail.zanecoachesyt.com`. I’m going to add the equivalent Resend records under the `mail` subdomain, then rerun the live email test.
+
+### Sender Env Switch
+
+> Resend still says the `mail.` sending domain itself is not verified. Since Vercel DNS now shows the root-domain Resend records are present, I’m going to switch the sender from `results@mail.zanecoachesyt.com` to `results@zanecoachesyt.com`, redeploy, and test again. That matches the verified root-domain setup and should get this live faster.
+
+### Sender Env Update
+
+> The production sender env is now switched to `results@zanecoachesyt.com`, matching the root-domain Resend records that are actually in DNS. I’m redeploying from Vercel’s existing source so the new env values take effect, then I’ll test the full lead + email flow again.
+
+### Final Flow Pass
+
+> Full flow passed now: live site is 200, GitHub lead storage saved, and Resend accepted the results email. I’m going to add the normal `www` alias too if Vercel allows it cleanly, then I’ll update the running context with the final ready-for-testing state.
+
+### Final Context Update
+
+> Both `zanecoachesyt.com` and `www.zanecoachesyt.com` now return 200. I’m updating the running context with the successful email/storage/domain verification and pushing that note so the repo reflects the actual shipped state.
+
 ## Implementation Rationale
 
 - Page 2 was left unchanged because the user explicitly requested that.
@@ -317,5 +364,6 @@ User message, verbatim with secrets redacted:
 - The Git remote `origin` was repointed from `SuperDashJ/zanesbestlife-quiz` to `SuperDashJ/zanecoachesyt-quiz`.
 - Vercel deployment required setting the project framework to Next.js and production protection to allow the public `*.vercel.app` URL.
 - The empty private lead repo required a bootstrap path in `lib/storage.js` so the first lead can initialize GitHub storage using the Contents API before appending daily NDJSON lead files.
-- Resend API credentials are installed, but Resend will not send from `results@mail.zanecoachesyt.com` until `mail.zanecoachesyt.com` is verified in Resend.
+- Resend API credentials are installed and live delivery succeeds from `results@zanecoachesyt.com`.
 - Vercel duplicate projects were safe to delete because they were separate Vercel project wrappers pointing to the same GitHub repo, not separate source-code repos. The canonical Vercel project remains `zanecoachesyt-quiz`.
+- The fastest final fix was to use the verified root-domain sender `results@zanecoachesyt.com` instead of waiting on the separate `mail.zanecoachesyt.com` sender domain.

@@ -6,7 +6,7 @@ import { track } from "@vercel/analytics";
 import { quizSteps } from "@/lib/quiz-data";
 import { Illustration } from "@/components/illustrations";
 
-const STORAGE_KEY = "zanesbestlife-quiz-state";
+const STORAGE_KEY = "zanecoachesyt-quiz-state";
 const ANSWER_STEP_IDS = quizSteps
   .filter((step) => step.kind !== "email")
   .map((step) => step.id);
@@ -391,7 +391,7 @@ export function QuizApp() {
   return (
     <div className="site-shell">
       <header className="brand-bar">
-        <div className="brand-mark">zanesbestlife</div>
+        <div className="brand-mark">zanecoachesyt</div>
       </header>
 
       <main className="page-shell">

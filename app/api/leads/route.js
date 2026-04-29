@@ -50,7 +50,7 @@ export async function POST(request) {
       answers: payload.answers,
       profile,
       emailDelivery,
-      source: "zanesbestlife-quiz",
+      source: "zanecoachesyt-quiz",
       ipAddress:
         request.headers.get("x-forwarded-for") ||
         request.headers.get("x-real-ip") ||

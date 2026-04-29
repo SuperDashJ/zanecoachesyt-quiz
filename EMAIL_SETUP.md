@@ -27,15 +27,15 @@ This quiz already has the core email flow implemented. The visitor enters an ema
 
 ```bash
 RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL="ZanesBestLife <results@your-verified-domain.com>"
+RESEND_FROM_EMAIL="ZaneCoachesYT <results@your-verified-domain.com>"
 RESEND_REPLY_TO="you@your-domain.com"
 ```
 
-For the current `zanesquiz.com` setup, use:
+For the ZaneCoachesYT setup, replace the domain and reply-to with the real values you choose:
 
 ```bash
-RESEND_FROM_EMAIL="ZanesBestLife <results@zanesquiz.com>"
-RESEND_REPLY_TO="zanesquizresults@gmail.com"
+RESEND_FROM_EMAIL="ZaneCoachesYT <results@your-verified-domain.com>"
+RESEND_REPLY_TO="you@your-domain.com"
 ```
 
 7. Configure production lead storage too, because `/api/leads` requires storage in production:
@@ -72,7 +72,7 @@ To test real delivery locally, create `.env.local` with real values:
 
 ```bash
 RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL="ZanesBestLife <results@your-verified-domain.com>"
+RESEND_FROM_EMAIL="ZaneCoachesYT <results@your-verified-domain.com>"
 RESEND_REPLY_TO="you@your-domain.com"
 ```
 
@@ -87,7 +87,7 @@ Submit the quiz through the browser, or POST a test payload to `/api/leads`.
 ## Important Production Notes
 
 - Do not use `onboarding@resend.dev` for the real public site. Use a verified sender on your own domain.
-- The app treats `onboarding@resend.dev` as a placeholder and sends from `ZanesBestLife <results@zanesquiz.com>` instead.
+- The app treats `onboarding@resend.dev` as a placeholder and sends from `ZaneCoachesYT <results@zanecoachesyt.com>` instead.
 - Do not commit `.env.local`, API keys, or GitHub tokens.
 - If email delivery fails in production, the API returns a `502` with `"We saved the lead, but the report email could not be sent..."` so launch testing should catch it.
 - If lead storage is not configured in production, the API returns an error even if email settings are present.

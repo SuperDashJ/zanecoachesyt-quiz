@@ -1,4 +1,4 @@
-# ZANESBESTLIFE Quiz
+# ZANECOACHESYT Quiz
 
 A high-converting quiz funnel built in Next.js with:
 
@@ -23,7 +23,7 @@ In development, submitted leads are appended to `data/leads-dev.ndjson`.
 For durable storage on Vercel, set these environment variables and point them at a **private GitHub repository** dedicated to leads:
 
 ```bash
-GITHUB_STORAGE_REPO=SuperDashJ/zanesbestlife-leads
+GITHUB_STORAGE_REPO=SuperDashJ/zanecoachesyt-leads
 GITHUB_STORAGE_TOKEN=github_pat_xxx
 ```
 
@@ -39,10 +39,10 @@ Optional production overrides:
 
 ```bash
 GITHUB_STORAGE_BRANCH=leads
-GITHUB_STORAGE_COMMITTER_NAME=ZanesBestLife Leads
+GITHUB_STORAGE_COMMITTER_NAME=ZaneCoachesYT Leads
 GITHUB_STORAGE_COMMITTER_EMAIL=leads@users.noreply.github.com
-RESEND_FROM_EMAIL="ZanesBestLife <results@zanesquiz.com>"
-RESEND_REPLY_TO=zanesquizresults@gmail.com
+RESEND_FROM_EMAIL="ZaneCoachesYT <results@zanecoachesyt.com>"
+RESEND_REPLY_TO=you@example.com
 ```
 
 How it works:

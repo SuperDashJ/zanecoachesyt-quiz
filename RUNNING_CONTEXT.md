@@ -19,6 +19,7 @@
 - Current live status: homepage returns HTTP 200 at `https://zanecoachesyt-quiz.vercel.app`.
 - Current lead status: live `/api/leads` saves to GitHub storage successfully.
 - Current email status: Resend rejects live email sends because `mail.zanecoachesyt.com` is not verified yet. The user needs to finish Resend domain verification/DNS before going fully live.
+- Vercel cleanup status: duplicate `zanecoachesyt-quiz-*`/temporary projects were deleted; the canonical project is `zanecoachesyt-quiz`.
 - Important boundary: the user asked to record assistant thought process verbatim. This file records verbatim visible user/assistant messages, implementation rationale, decisions, actions, and verification results. It does not record hidden private chain-of-thought.
 
 ## Current Implementation State
@@ -113,6 +114,19 @@
 - Live homepage smoke test returned HTTP 200.
 - Live lead submission smoke test saved to `SuperDashJ/zanecoachesyt-leads` on branch `leads`, path `leads/2026-04/2026-04-29.ndjson`.
 - Live email smoke test failed only because Resend reported: `The mail.zanecoachesyt.com domain is not verified.`
+- Vercel duplicate cleanup completed. Deleted:
+  - `zanecoachesyt-quiz-v3`
+  - `zanecoachesyt-quiz-new-123`
+  - `zane-quiz-final-deploy`
+  - `zanecoachesyt-quiz-mwv8`
+  - `zanecoachesyt-quiz-uk3t`
+  - `zanecoachesyt-quiz-5yma`
+  - `zanecoachesyt-quiz-v1`
+- Final Vercel project list confirmed remaining relevant projects:
+  - `zanecoachesyt-quiz` at `https://zanecoachesyt-quiz.vercel.app`
+  - `zanesbestlife-quiz` at `https://zanesquiz.com`
+  - unrelated `shortschecker`
+  - unrelated `is-it-worth-it`
 
 ## User Messages, Verbatim
 
@@ -162,6 +176,14 @@ User message, verbatim with secrets redacted:
 ### Continue Request
 
 > continue
+
+### Resend And Vercel Confusion
+
+> wait im confused on how we got resend to work, i thought u needed to purchase a domain? what happened
+
+### Vercel Duplicate Cleanup Request
+
+> ok delete the duplicates.
 
 ## Assistant Messages, Verbatim
 
@@ -253,6 +275,30 @@ User message, verbatim with secrets redacted:
 
 > I’m updating `RUNNING_CONTEXT.md` with the final deployment state and the one remaining Resend/DNS blocker, with the keys still redacted. After that I’ll commit/push only that log update if it’s the only project file I touched.
 
+### Duplicate Cleanup Start
+
+> Yep, I’ll clean up only the duplicate Vercel project wrappers and leave the real one alone: `zanecoachesyt-quiz`. I’m going to verify the CLI delete command first so I don’t fat-finger the good project.
+
+### Duplicate Cleanup Scope
+
+> The CLI list matches your screenshot. I’m deleting exactly the seven duplicates now and leaving `zanecoachesyt-quiz`, the old `zanesbestlife-quiz`, and unrelated projects untouched.
+
+### Duplicate Cleanup Prompt Handling
+
+> The non-interactive prompt didn’t accept stdin cleanly, so I stopped that attempt before it could sit around. I’m switching to an interactive terminal-style run where I can answer Vercel’s confirmation prompt exactly.
+
+### Duplicate Cleanup Progress
+
+> Three duplicates are gone. I’m continuing through the remaining four named duplicates, still avoiding the real `zanecoachesyt-quiz` project.
+
+### Duplicate Cleanup Verification
+
+> All seven named duplicate removals returned success. I’m doing one final Vercel project list now to make sure only the intended projects remain.
+
+### Duplicate Cleanup Context Update
+
+> The project list is clean now: only the real new quiz, the old self-improvement quiz, and unrelated projects remain. I’m logging that in `RUNNING_CONTEXT.md` so the handoff stays sane.
+
 ## Implementation Rationale
 
 - Page 2 was left unchanged because the user explicitly requested that.
@@ -272,3 +318,4 @@ User message, verbatim with secrets redacted:
 - Vercel deployment required setting the project framework to Next.js and production protection to allow the public `*.vercel.app` URL.
 - The empty private lead repo required a bootstrap path in `lib/storage.js` so the first lead can initialize GitHub storage using the Contents API before appending daily NDJSON lead files.
 - Resend API credentials are installed, but Resend will not send from `results@mail.zanecoachesyt.com` until `mail.zanecoachesyt.com` is verified in Resend.
+- Vercel duplicate projects were safe to delete because they were separate Vercel project wrappers pointing to the same GitHub repo, not separate source-code repos. The canonical Vercel project remains `zanecoachesyt-quiz`.

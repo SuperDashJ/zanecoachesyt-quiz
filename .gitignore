@@ -14,3 +14,4 @@ yarn-error.log*
 pnpm-debug.log*
 data/leads-dev.ndjson
 data/leads-dev.json
+.vercel
